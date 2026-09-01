@@ -19,7 +19,7 @@ The public deployment is a Vinext static export on GitHub Pages. The normal Vine
 
 Course narrative can be authored in MDX. `remark-math` identifies TeX and `rehype-mathjax` renders CHTML during the build; the build also enables MathJax's assistive MathML handler. MathJax fonts are copied into `public/mathjax/fonts` before development or production builds, so the student page does not load a runtime typesetter or depend on a font CDN.
 
-The Pages build keeps the framework's route-aware `basePath`. Vinext 1.0.0-beta.8 currently skips a base-path home route during its export pass, so `scripts/export-pages.mjs` renders only missing discovered routes through the completed worker bundle. Remove that bridge once the upstream export handles the route directly; `scripts/verify-pages.mjs` makes the current contract explicit.
+The Pages build keeps the framework's route-aware `basePath`. Vinext 1.0.0-beta.8 currently skips a base-path home route during its export pass and nests client assets one prefix too deep for a Pages artifact. `scripts/export-pages.mjs` renders only missing discovered routes through the completed worker bundle and mirrors those client assets to the artifact root. Remove that bridge once the upstream export handles both paths directly; `scripts/verify-pages.mjs` checks every local asset referenced by the generated HTML so a partially working publication cannot pass CI.
 
 ## Growth rules
 

@@ -38,5 +38,26 @@ for (const requiredMathMarkup of [
   }
 }
 
+const localAssetPaths = new Set(
+  [...html.matchAll(/(?:src|href)="([^"#]+)"/g)]
+    .map((match) => match[1])
+    .filter((assetPath) => assetPath.startsWith(expectedBasePath))
+    .map((assetPath) => assetPath.slice(expectedBasePath.length)),
+);
+
+await Promise.all(
+  [...localAssetPaths].map(async (assetPath) => {
+    try {
+      await access(new URL(assetPath, outputDirectory));
+    } catch {
+      throw new Error(
+        `Static export references a missing GitHub Pages asset: ${assetPath}`,
+      );
+    }
+  }),
+);
+
 await writeFile(noJekyllFile, '');
-console.log('GitHub Pages export and build-time MathJax verified.');
+console.log(
+  `GitHub Pages export, ${localAssetPaths.size} assets, and build-time MathJax verified.`,
+);

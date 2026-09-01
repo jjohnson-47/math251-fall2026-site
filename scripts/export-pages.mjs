@@ -1,10 +1,12 @@
-import { access, mkdir, readFile, writeFile } from 'node:fs/promises';
+import { access, cp, mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const basePath = '/math251-fall2026-site';
 const projectDirectory = fileURLToPath(new URL('../', import.meta.url));
 const clientDirectory = join(projectDirectory, 'dist/client');
+const nestedAssetDirectory = join(clientDirectory, basePath.slice(1), '_next');
+const publicAssetDirectory = join(clientDirectory, '_next');
 const pathManifest = JSON.parse(
   await readFile(
     join(projectDirectory, 'dist/server/vinext-prerender-paths.json'),
@@ -22,6 +24,15 @@ const executionContext = {
 };
 
 let renderedCount = 0;
+
+// GitHub Pages mounts the artifact root at `basePath`. Vinext currently emits
+// its base-path client assets under that prefix inside the artifact too, which
+// would double the path in production. Mirror them to the artifact root.
+await access(nestedAssetDirectory);
+await cp(nestedAssetDirectory, publicAssetDirectory, {
+  recursive: true,
+  force: true,
+});
 
 for (const routePath of pathManifest.paths) {
   if (
