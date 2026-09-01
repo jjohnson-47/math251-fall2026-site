@@ -1,0 +1,45 @@
+<section
+  id="math-in-focus"
+  aria-labelledby="math-in-focus-title"
+  className="math-note scroll-mt-20 border-b border-foreground/10"
+>
+  <div className="mx-auto grid max-w-7xl gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-16 lg:px-10 lg:py-20">
+    <div>
+      <p className="section-kicker">Math in focus</p>
+      <h2
+        id="math-in-focus-title"
+        className="mt-3 font-heading text-4xl leading-none font-semibold tracking-[-0.035em] text-balance sm:text-5xl"
+      >
+        A secant line becomes a tangent line.
+      </h2>
+      <p className="mt-5 max-w-lg leading-7 text-muted-foreground">
+        The symbols arrive already typeset with the page, while semantic MathML
+        gives assistive technology a separate mathematical representation.
+      </p>
+    </div>
+
+    <div className="math-prose rounded-2xl border border-foreground/10 bg-card p-5 shadow-[0_18px_52px_rgb(27_38_54/6%)] sm:p-8">
+      The secant slope compares two points separated by an input change $h$:
+
+      $$
+      m_{\mathrm{sec}}=\frac{f(x+h)-f(x)}{h},\qquad h\ne 0.
+      $$
+
+      Letting that gap shrink gives the instantaneous rate of change:
+
+      $$
+      f'(x)=\href{#explore}{\class{math-link}{\lim_{h\to 0}}}\frac{f(x+h)-f(x)}{h}.
+      $$
+
+      <p className="math-caption">
+        The highlighted limit is a link. It returns to the graph so you can
+        watch the secant slope approach the tangent slope.
+      </p>
+
+      <a className="math-action" href="#explore">
+        Test the limit on the graph <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+  </div>
+</section>
