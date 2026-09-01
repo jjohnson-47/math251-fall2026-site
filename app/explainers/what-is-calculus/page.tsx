@@ -35,7 +35,7 @@ export default function WhatIsCalculusPage() {
               Calculus is one limiting idea used twice.
             </h1>
             <p className="mt-7 text-sm font-semibold tracking-[0.02em] text-muted-foreground">
-              Answered by Jeff · About 6 minutes
+              From our Week 1 discussion · Approximately 6 minutes
             </p>
           </div>
         </header>

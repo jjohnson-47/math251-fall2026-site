@@ -17,7 +17,7 @@ export function SiteFooter() {
           href={siteHref('/explainers/')}
           className="w-fit rounded-sm font-semibold text-background/78 underline decoration-accent decoration-2 underline-offset-4 outline-none hover:text-background focus-visible:ring-3 focus-visible:ring-accent/45"
         >
-          Read the notebook
+          Read the explanations
         </a>
       </div>
     </footer>

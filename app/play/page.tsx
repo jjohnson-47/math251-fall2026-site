@@ -22,7 +22,7 @@ export default function PlayPage() {
           <a className="text-link text-sm font-semibold" href={siteHref('/')}>
             ← Back to the notebook
           </a>
-          <p className="section-kicker mt-8">Play · Stage A / B / C</p>
+          <p className="section-kicker mt-8">Experiment · Stage A / B / C</p>
           <h1 className="mt-3 max-w-4xl font-heading text-[clamp(3.2rem,8vw,6.6rem)] leading-[0.88] font-semibold tracking-[-0.055em] text-balance">
             Can two clocks measure one instant?
           </h1>

@@ -13,6 +13,12 @@ import { Play, RotateCcw } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { ballDistance, measureGateRun, type GateRun } from '@/lib/calculus';
+import {
+  formatGateReading,
+  formatGateValue,
+  gateRunAnnouncement,
+} from '@/lib/gate-readout';
+import { activeCalculusSectionOneOne } from '@/lib/site';
 
 const TRACK_LENGTH = 100;
 const MINIMUM_GATE_GAP = 0.01;
@@ -34,14 +40,16 @@ function roundPosition(value: number) {
   return Math.round(value * 10_000) / 10_000;
 }
 
-function formatPosition(value: number) {
-  return new Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 4,
-  }).format(value);
-}
+function gateReadoutTransform(position: number) {
+  if (position <= 15) {
+    return 'translateX(0)';
+  }
 
-function resultAnnouncement(result: GateRun) {
-  return `Gate A is at ${formatPosition(result.gateA)} metres and Gate B is at ${formatPosition(result.gateB)} metres. Delta d is ${formatPosition(result.distanceChange)} metres. Delta t is ${result.elapsedTime.toFixed(4)} seconds. The average speed is ${result.averageSpeed.toFixed(2)} metres per second.`;
+  if (position >= 85) {
+    return 'translateX(-100%)';
+  }
+
+  return 'translateX(-50%)';
 }
 
 function resultNote(result: GateRun | null) {
@@ -53,14 +61,14 @@ function resultNote(result: GateRun | null) {
     Math.abs(result.gateA - 25) < 0.0001 &&
     Math.abs(result.gateB - 100) < 0.0001
   ) {
-    return 'The ball is moving at 10 m/s at A and 20 m/s at B. The 15.00 m/s readout describes the whole gap; it does not locate one instant.';
+    return 'The ball speeds up continuously between the gates, so its average velocity lies between its velocities at A and at B. The 15.00 m/s result describes the whole interval, not either endpoint.';
   }
 
   if (Math.abs(result.gateA - 25) < 0.0001 && result.distanceChange < 2) {
-    return 'The gates have not met, but the average speed is settling near 10 m/s.';
+    return 'The gates have not met, but the average velocity is settling near 10 m/s.';
   }
 
-  return 'This readout is an average over the whole gap; it does not locate one instant.';
+  return 'This average velocity describes the whole interval; it does not locate one instant.';
 }
 
 export function BallGateLab() {
@@ -68,6 +76,8 @@ export function BallGateLab() {
   const [gateB, setGateB] = useState(100);
   const [ballPosition, setBallPosition] = useState(0);
   const [clock, setClock] = useState(0);
+  const [gateATime, setGateATime] = useState<number | null>(null);
+  const [gateBTime, setGateBTime] = useState<number | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [lastResult, setLastResult] = useState<GateRun | null>(null);
   const [runLog, setRunLog] = useState<GateRun[]>([]);
@@ -93,11 +103,13 @@ export function BallGateLab() {
 
   const finishRun = useCallback((result: GateRun) => {
     setBallPosition(result.gateB);
-    setClock(result.elapsedTime);
+    setClock(result.endTime);
+    setGateATime(result.startTime);
+    setGateBTime(result.endTime);
     setIsRunning(false);
     setLastResult(result);
     setRunLog((current) => [...current.slice(-3), result]);
-    setAnnouncement(resultAnnouncement(result));
+    setAnnouncement(gateRunAnnouncement(result));
     animationFrame.current = null;
   }, []);
 
@@ -110,7 +122,10 @@ export function BallGateLab() {
 
     setBallPosition(0);
     setClock(0);
+    setGateATime(null);
+    setGateBTime(null);
     setIsRunning(true);
+    setLastResult(null);
     setAnnouncement('The ball is running.');
 
     if (reduceMotion) {
@@ -123,14 +138,17 @@ export function BallGateLab() {
       const progress = clamp((now - startedAt) / RUN_DURATION_MS, 0, 1);
       const simulatedTime = result.endTime * progress;
       const distance = Math.min(ballDistance(simulatedTime), result.gateB);
-      const measuredTime = clamp(
-        simulatedTime - result.startTime,
-        0,
-        result.elapsedTime,
-      );
 
       setBallPosition(distance);
-      setClock(measuredTime);
+      setClock(simulatedTime);
+
+      if (simulatedTime >= result.startTime) {
+        setGateATime(result.startTime);
+      }
+
+      if (simulatedTime >= result.endTime) {
+        setGateBTime(result.endTime);
+      }
 
       if (progress < 1) {
         animationFrame.current = requestAnimationFrame(tick);
@@ -148,6 +166,8 @@ export function BallGateLab() {
     setGateB(nextGateB);
     setBallPosition(0);
     setClock(0);
+    setGateATime(null);
+    setGateBTime(null);
     setIsRunning(false);
     setLastResult(null);
   };
@@ -283,7 +303,7 @@ export function BallGateLab() {
                 aria-valuemin={0}
                 aria-valuemax={gateB - MINIMUM_GATE_GAP}
                 aria-valuenow={gateA}
-                aria-valuetext={`${formatPosition(gateA)} metres`}
+                aria-valuetext={`${formatGateValue(gateA)} metres`}
                 disabled={isRunning}
                 className="gate-marker gate-a"
                 style={{ left: `${gateA}%` }}
@@ -292,7 +312,22 @@ export function BallGateLab() {
                 onKeyDown={(event) => moveGateWithKeyboard('a', event)}
               >
                 <span aria-hidden="true" className="gate-post" />
-                <span className="gate-readout">A {formatPosition(gateA)}m</span>
+                <span
+                  aria-hidden="true"
+                  className="gate-readout"
+                  style={{ transform: gateReadoutTransform(gateA) }}
+                >
+                  <span className="gate-readout-title">Gate A</span>
+                  <span>
+                    s<sub>A</sub> = {formatGateReading(gateA)} m
+                  </span>
+                  <span className="gate-readout-time">
+                    t<sub>A</sub> ={' '}
+                    {gateATime === null
+                      ? '—'
+                      : `${formatGateReading(gateATime)} s`}
+                  </span>
+                </span>
               </button>
 
               <button
@@ -302,7 +337,7 @@ export function BallGateLab() {
                 aria-valuemin={gateA + MINIMUM_GATE_GAP}
                 aria-valuemax={TRACK_LENGTH}
                 aria-valuenow={gateB}
-                aria-valuetext={`${formatPosition(gateB)} metres`}
+                aria-valuetext={`${formatGateValue(gateB)} metres`}
                 disabled={isRunning}
                 className="gate-marker gate-b"
                 style={{ left: `${gateB}%` }}
@@ -311,15 +346,37 @@ export function BallGateLab() {
                 onKeyDown={(event) => moveGateWithKeyboard('b', event)}
               >
                 <span aria-hidden="true" className="gate-post" />
-                <span className="gate-readout">B {formatPosition(gateB)}m</span>
+                <span
+                  aria-hidden="true"
+                  className="gate-readout"
+                  style={{ transform: gateReadoutTransform(gateB) }}
+                >
+                  <span className="gate-readout-title">Gate B</span>
+                  <span>
+                    s<sub>B</sub> = {formatGateReading(gateB)} m
+                  </span>
+                  <span className="gate-readout-time">
+                    t<sub>B</sub> ={' '}
+                    {gateBTime === null
+                      ? '—'
+                      : `${formatGateReading(gateBTime)} s`}
+                  </span>
+                </span>
               </button>
+            </div>
+          </div>
+
+          <div className="mt-4 flex justify-end">
+            <div className="play-clock" aria-hidden="true">
+              <span>Clock t</span>
+              <strong>{formatGateReading(clock)} s</strong>
             </div>
           </div>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
             <div>
               <p className="play-kicker mb-2">
-                Try these in order—or ignore them
+                Try these in order, or choose your own
               </p>
               <div
                 className="flex flex-wrap gap-2"
@@ -365,28 +422,68 @@ export function BallGateLab() {
             </div>
           </div>
 
-          <div className="mt-5 grid border-t-2 border-l-2 border-[color:var(--play-border)] sm:grid-cols-4">
-            <div className="play-readout">
-              <span>Clock / Δt</span>
-              <strong>{clock.toFixed(4)} s</strong>
+          <div className="gate-calculation mt-5" aria-hidden="true">
+            <div className="gate-calculation-row">
+              <span>
+                Δs = s<sub>B</sub> − s<sub>A</sub>
+              </span>
+              <span>
+                = {formatGateReading(gateB)} m − {formatGateReading(gateA)} m ={' '}
+                {formatGateReading(configuredRun.distanceChange)} m
+              </span>
             </div>
-            <div className="play-readout">
-              <span>Distance / Δd</span>
-              <strong>
-                {lastResult
-                  ? `${formatPosition(lastResult.distanceChange)} m`
-                  : '—'}
-              </strong>
+            <div className="gate-calculation-row">
+              <span>
+                Δt = t<sub>B</sub> − t<sub>A</sub>
+              </span>
+              <span>
+                ={' '}
+                {gateBTime === null ? '—' : `${formatGateReading(gateBTime)} s`}{' '}
+                −{' '}
+                {gateATime === null ? '—' : `${formatGateReading(gateATime)} s`}{' '}
+                ={' '}
+                {lastResult === null
+                  ? '—'
+                  : `${formatGateReading(lastResult.elapsedTime)} s`}
+              </span>
             </div>
-            <div className="play-readout sm:col-span-2">
-              <span>Average / Δd ÷ Δt</span>
-              <strong className="text-[color:var(--play-accent)]">
-                {lastResult ? `${lastResult.averageSpeed.toFixed(2)} m/s` : '—'}
-              </strong>
+            <div className="gate-calculation-row gate-calculation-average">
+              <span>Average velocity</span>
+              <span>
+                = Δs ÷ Δt ={' '}
+                {lastResult === null
+                  ? '—'
+                  : `${formatGateReading(lastResult.distanceChange)} m ÷ ${formatGateReading(lastResult.elapsedTime)} s = ${lastResult.averageSpeed.toFixed(2)} m/s`}
+              </span>
             </div>
           </div>
 
-          <p className="mt-4 font-mono text-xs leading-5 text-[color:var(--play-muted)]">
+          <div className="play-teaching-notes">
+            <p>
+              The gate positions determine Δs before the run. The crossing times
+              — and so the measured value of Δt — are not shown until the ball
+              reaches each gate.
+            </p>
+            <p>
+              The delay between the two stamps represents the interval whose
+              value is t<sub>B</sub> − t<sub>A</sub>.
+            </p>
+            <p>
+              Both positions are measured from the same reference point. Δs is
+              the difference between them.
+            </p>
+            <p>
+              Because the ball moves only forward here, its average speed and
+              average velocity have the same value.
+            </p>
+            <p>
+              <a href={activeCalculusSectionOneOne}>Active Calculus §1.1</a>{' '}
+              writes this without the Δ, as AV[a,b] = (s(b) − s(a)) / (b − a).
+              Same subtraction over the same subtraction.
+            </p>
+          </div>
+
+          <p className="mt-5 font-mono text-xs leading-5 text-[color:var(--play-muted)]">
             {resultNote(lastResult)}
           </p>
 
@@ -413,10 +510,17 @@ export function BallGateLab() {
                     <span className="text-[color:var(--play-muted)]">
                       {String(index + 1).padStart(2, '0')}
                     </span>
-                    <span>
-                      gates {formatPosition(result.distanceChange)} m apart →{' '}
+                    <span className="run-log-entry">
+                      <span>
+                        {formatGateValue(result.gateA)} →{' '}
+                        {formatGateValue(result.gateB)}
+                      </span>
+                      <span>
+                        Δs {formatGateReading(result.distanceChange)} m
+                      </span>
+                      <span>Δt {formatGateReading(result.elapsedTime)} s</span>
                       <strong className="text-[color:var(--play-accent)]">
-                        {result.averageSpeed.toFixed(2)} m/s
+                        = {result.averageSpeed.toFixed(2)} m/s
                       </strong>
                     </span>
                   </li>
@@ -430,8 +534,10 @@ export function BallGateLab() {
           </p>
           <p className="sr-only">
             The currently configured run has Gate A at{' '}
-            {formatPosition(configuredRun.gateA)} metres and Gate B at{' '}
-            {formatPosition(configuredRun.gateB)} metres.
+            {formatGateValue(configuredRun.gateA)} metres and Gate B at{' '}
+            {formatGateValue(configuredRun.gateB)} metres. The change in
+            position is {formatGateValue(configuredRun.distanceChange)} metres.
+            Crossing times are reported after the ball reaches each gate.
           </p>
         </div>
       </div>

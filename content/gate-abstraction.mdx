@@ -9,8 +9,9 @@ import { activeCalculusSectionOneOne } from '@/lib/site';
     <aside className="marg self-start">
       <p className="marg-label">What I want you to notice</p>
       <p>
-        The clock never reports a speed at one instant. It reports an honest
-        average across a gap. The surprise is that the averages settle anyway.
+        The clock never reports a velocity at one instant. It reports an honest
+        average across a gap. Even so, the average velocities approach a
+        definite value.
       </p>
     </aside>
 
@@ -20,20 +21,21 @@ import { activeCalculusSectionOneOne } from '@/lib/site';
         id="what-you-discovered-title"
         className="mt-3 font-heading text-4xl leading-[0.98] font-semibold tracking-[-0.035em] text-balance sm:text-5xl"
       >
-        The stopwatch already contained the derivative.
+        These measurements already contain the derivative.
       </h2>
 
-      Call the time $t$ and the distance so far $f(t)$. Gate A is at time $t$;
-      Gate B is at $t+h$. Then
+      Call the time $t$ and the position $s(t)$ — the same letter *Active
+      Calculus* uses for a position function. Gate A is crossed at time $t$ and
+      gate B at $t+h$, so
 
       $$
-      \Delta d=f(t+h)-f(t),\qquad \Delta t=h,
+      \Delta s=s(t+h)-s(t),\qquad \Delta t=h,
       $$
 
-      so the readout is
+      and the readout is
 
       $$
-      \frac{\Delta d}{\Delta t}=\frac{f(t+h)-f(t)}{h}.
+      \frac{\Delta s}{\Delta t}=\frac{s(t+h)-s(t)}{h}.
       $$
 
       Squeezing the gates is making $h$ small. At the 25-metre mark, the
@@ -41,12 +43,30 @@ import { activeCalculusSectionOneOne } from '@/lib/site';
       the same place:
 
       $$
-      f'(t)=\lim_{h\to 0}\frac{f(t+h)-f(t)}{h}.
+      s'(t)=\lim_{h\to 0}\frac{s(t+h)-s(t)}{h}.
       $$
 
+      A position function is one example of a function, so from Section 1.3 the
+      book writes the same limit for any $f$:
+
+      $$
+      f'(a)=\lim_{h\to 0}\frac{f(a+h)-f(a)}{h}.
+      $$
+
+      Nothing changes but the letter. When the moving object is gone, $s$ becomes
+      $f$ and the derivative is whatever that function's rate of change happens
+      to measure.
+
       <p className="math-caption">
-        Nothing new happened; the stopwatch got a notation. A limit means
-        “squeeze until the answers stop moving.”
+        The notation describes the same measurement process in mathematical
+        terms. Here, the limit is the value approached as the distance between
+        the gates tends to zero.
+      </p>
+
+      <p className="math-caption">
+        <em>Active Calculus</em> §1.1 writes this without the Δ, as
+        $\mathrm{AV}_{[a,b]}=\frac{s(b)-s(a)}{b-a}$. It is the same subtraction
+        over the same subtraction. Δ is only a name for the difference.
       </p>
 
       <p className="mt-5">

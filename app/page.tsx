@@ -9,16 +9,16 @@ import { explainerRequestHref, siteHref } from '@/lib/site';
 
 const questions = [
   {
-    state: 'Posted',
+    state: 'Available',
     question: 'What is calculus, and what will I be able to do?',
-    provenance: 'Came up in Week 1 · Answered by Jeff · About 6 minutes',
+    provenance: 'From our Week 1 discussion · Approximately 6 minutes',
     href: '/explainers/what-is-calculus/',
   },
   {
-    state: 'Writing',
+    state: 'In preparation',
     question:
       '“How does finding the instantaneous slope of a curve lead down to spacetime being bent like water?”',
-    provenance: 'Asked in MATH A251 · In progress',
+    provenance: 'Asked in MATH A251 · In preparation',
     href: null,
   },
 ] as const;
@@ -52,7 +52,7 @@ export default function Home() {
               href="#playfield"
               className="mt-7 inline-flex min-h-11 items-center gap-2 rounded-lg bg-primary px-5 text-sm font-semibold text-primary-foreground shadow-[0_12px_28px_color-mix(in_oklch,var(--primary),transparent_72%)] outline-none hover:bg-primary/88 focus-visible:ring-3 focus-visible:ring-ring/45"
             >
-              Try this before reading the answer
+              Begin with the experiment
               <ArrowDown className="size-4" aria-hidden="true" />
             </a>
           </div>
@@ -67,9 +67,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-18">
           <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="section-kicker">
-                Try this before reading the answer
-              </p>
+              <p className="section-kicker">Begin with the experiment</p>
               <h2
                 id="playfield-heading"
                 className="mt-2 font-heading text-4xl leading-none font-semibold tracking-[-0.035em] text-balance sm:text-5xl"
@@ -81,12 +79,13 @@ export default function Home() {
               variant="outline"
               className="h-7 border-accent/50 bg-accent/13 text-accent-foreground"
             >
-              Nothing graded · nothing tracked
+              Optional practice · no submission required
             </Badge>
           </div>
           <p className="mb-8 max-w-2xl text-base leading-7 text-muted-foreground">
-            Nothing here can hurt your grade—go and break it. Run the ball,
-            squeeze the gates, and keep an eye on the sequence in the log.
+            This activity is not graded, and the site does not record your work.
+            Experiment freely: run the ball, squeeze the gates, and watch the
+            sequence in the log.
           </p>
           <BallGateLab />
           <div className="mt-7 text-right">
@@ -111,12 +110,12 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-10 lg:py-18">
           <div className="grid gap-8 lg:grid-cols-[0.65fr_1.35fr] lg:gap-14">
             <div>
-              <p className="section-kicker">Questions from MATH A251</p>
+              <p className="section-kicker">The question ledger</p>
               <h2
                 id="questions-title"
                 className="mt-3 font-heading text-4xl leading-none font-semibold tracking-[-0.035em] text-balance sm:text-5xl"
               >
-                The notebook grows from here.
+                Questions from this course
               </h2>
               <p className="mt-5 max-w-md leading-7 text-muted-foreground">
                 A row appears because a real question was asked. Questions may
@@ -158,8 +157,8 @@ export default function Home() {
                 </article>
               ))}
               <p className="py-5 text-sm leading-6 text-muted-foreground">
-                That is the whole list. It is short because the notebook is
-                young, not because it is waiting to be padded.
+                There are {questions.length} entries so far. I will add to this
+                list as questions arise.
               </p>
             </div>
           </div>
@@ -169,12 +168,12 @@ export default function Home() {
       <section id="ask" aria-labelledby="ask-title">
         <div className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-8 md:grid-cols-[1fr_auto] md:items-end lg:px-10 lg:py-18">
           <div className="max-w-3xl">
-            <p className="section-kicker">Ask for the next one</p>
+            <p className="section-kicker">Request an explanation</p>
             <h2
               id="ask-title"
               className="mt-3 font-heading text-4xl leading-none font-semibold tracking-[-0.035em] text-balance sm:text-5xl"
             >
-              Tell me where the explanation stops working.
+              Tell me which step is unclear.
             </h2>
             <p className="mt-5 max-w-2xl leading-7 text-muted-foreground">
               This page exists because the question kept coming up. Send the
@@ -190,7 +189,7 @@ export default function Home() {
             className="inline-flex min-h-12 w-fit items-center gap-2 rounded-lg bg-primary px-5 font-semibold text-primary-foreground outline-none hover:bg-primary/88 focus-visible:ring-3 focus-visible:ring-ring/45"
           >
             <Mail className="size-4" aria-hidden="true" />
-            Open an email draft
+            Email me a question
           </a>
         </div>
       </section>

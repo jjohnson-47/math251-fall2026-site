@@ -43,3 +43,4 @@ next-env.d.ts
 # implements their approved conclusions, not the source notes themselves.
 /docs/brief-*.md
 /docs/note-personal-feel.md
+/docs/spec-*.md

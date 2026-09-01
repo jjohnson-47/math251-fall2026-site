@@ -15,21 +15,21 @@ export const metadata: Metadata = {
 const explainers = [
   {
     number: '01',
-    status: 'Posted',
+    status: 'Available',
     question: 'What is calculus, and what will I be able to do?',
     summary:
       'How one limiting idea becomes instantaneous change, accumulation, and the Fundamental Theorems.',
-    provenance: 'Came up in Week 1 · Answered by Jeff · About 6 minutes',
+    provenance: 'From our Week 1 discussion · Approximately 6 minutes',
     href: '/explainers/what-is-calculus/',
   },
   {
     number: '02',
-    status: 'Writing',
+    status: 'In preparation',
     question:
       '“How does finding the instantaneous slope of a curve lead down to spacetime being bent like water?”',
     summary:
       'The path from local change to geometry, and where calculus is only the beginning of the answer.',
-    provenance: 'Asked in MATH A251 · In progress',
+    provenance: 'Asked in MATH A251 · In preparation',
     href: null,
   },
 ] as const;
@@ -43,11 +43,11 @@ export default function ExplainersPage() {
         <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10 lg:py-18">
           <p className="section-kicker">Explainers</p>
           <h1 className="mt-4 max-w-4xl font-heading text-[clamp(3.4rem,9vw,7rem)] leading-[0.86] font-semibold tracking-[-0.055em] text-balance">
-            A question asked once. An answer kept for everyone.
+            Explanations based on questions from MATH A251.
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
-            Each page starts with a real question from MATH A251 and follows one
-            idea far enough to make it usable.
+            These notes respond to questions raised in MATH A251. Each one
+            develops a single idea and connects it to our course and textbook.
           </p>
         </div>
       </header>
@@ -104,15 +104,16 @@ export default function ExplainersPage() {
       >
         <div className="mx-auto grid max-w-7xl gap-7 px-5 py-12 sm:px-8 md:grid-cols-[1fr_auto] md:items-center lg:px-10 lg:py-16">
           <div className="max-w-2xl">
-            <p className="section-kicker">Ask for the next one</p>
+            <p className="section-kicker">Request an explanation</p>
             <h2
               id="explainer-ask-title"
               className="mt-3 font-heading text-4xl leading-none font-semibold tracking-[-0.035em]"
             >
-              Where does your explanation break?
+              Tell me which step is unclear.
             </h2>
             <p className="mt-4 leading-7 text-muted-foreground">
-              I usually post one or two a week. Say when a question is urgent.
+              I will add explanations as questions arise. If a question affects
+              work that is currently due, please say so in your message.
               Deadlines, grades, and submissions all stay in Blackboard.
             </p>
           </div>
@@ -121,7 +122,7 @@ export default function ExplainersPage() {
             className="inline-flex min-h-12 w-fit items-center gap-2 rounded-lg bg-primary px-5 font-semibold text-primary-foreground outline-none hover:bg-primary/88 focus-visible:ring-3 focus-visible:ring-ring/45"
           >
             <Mail className="size-4" aria-hidden="true" />
-            Open an email draft
+            Email me a question
           </a>
         </div>
       </section>

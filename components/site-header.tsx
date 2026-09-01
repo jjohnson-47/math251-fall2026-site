@@ -30,7 +30,7 @@ export function SiteHeader() {
             variant="outline"
             className="hidden border-primary/20 bg-primary/6 text-primary sm:inline-flex"
           >
-            Ungraded companion
+            Optional course resource
           </Badge>
         </div>
 
@@ -39,7 +39,7 @@ export function SiteHeader() {
           className="flex min-h-11 items-center gap-5 overflow-x-auto border-t border-foreground/8 py-2 sm:absolute sm:top-0 sm:left-1/2 sm:h-16 sm:-translate-x-1/2 sm:border-0 sm:py-0"
         >
           <a className="nav-link shrink-0" href={siteHref('/play/')}>
-            Play
+            Experiment
           </a>
           <a className="nav-link shrink-0" href={siteHref('/explainers/')}>
             Explainers
