@@ -1,0 +1,64 @@
+import { activeCalculusSectionOneOne } from '@/lib/site';
+
+<section
+  id="what-you-discovered"
+  aria-labelledby="what-you-discovered-title"
+  className="border-b border-foreground/10"
+>
+  <div className="mx-auto grid max-w-7xl gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.7fr_1.3fr] lg:gap-16 lg:px-10 lg:py-18">
+    <aside className="marg self-start">
+      <p className="marg-label">What I want you to notice</p>
+      <p>
+        The clock never reports a speed at one instant. It reports an honest
+        average across a gap. The surprise is that the averages settle anyway.
+      </p>
+    </aside>
+
+    <div className="math-prose max-w-3xl">
+      <p className="section-kicker">What you just discovered</p>
+      <h2
+        id="what-you-discovered-title"
+        className="mt-3 font-heading text-4xl leading-[0.98] font-semibold tracking-[-0.035em] text-balance sm:text-5xl"
+      >
+        The stopwatch already contained the derivative.
+      </h2>
+
+      Call the time $t$ and the distance so far $f(t)$. Gate A is at time $t$;
+      Gate B is at $t+h$. Then
+
+      $$
+      \Delta d=f(t+h)-f(t),\qquad \Delta t=h,
+      $$
+
+      so the readout is
+
+      $$
+      \frac{\Delta d}{\Delta t}=\frac{f(t+h)-f(t)}{h}.
+      $$
+
+      Squeezing the gates is making $h$ small. At the 25-metre mark, the
+      averages approach $10\ \text{m/s}$ even though the two gates never occupy
+      the same place:
+
+      $$
+      f'(t)=\lim_{h\to 0}\frac{f(t+h)-f(t)}{h}.
+      $$
+
+      <p className="math-caption">
+        Nothing new happened; the stopwatch got a notation. A limit means
+        “squeeze until the answers stop moving.”
+      </p>
+
+      <p className="mt-5">
+        This is the opening idea in{' '}
+        <a
+          className="text-link"
+          href={activeCalculusSectionOneOne}
+        >
+          Active Calculus §1.1, “How do we measure velocity?”
+        </a>
+      </p>
+    </div>
+
+  </div>
+</section>

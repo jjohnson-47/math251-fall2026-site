@@ -1,16 +1,17 @@
 # MATH A251 · Calculus I · Fall 2026
 
-A student-facing, practice-first course companion for interactive calculus learning.
+A student-facing course notebook for interactive calculus learning and short explanations built from questions in this class.
 
-The live site is published at <https://jjohnson-47.github.io/math251-fall2026-site/>. The first learning surface is a derivative lab that lets students move a secant line toward a tangent line and compare their slopes.
+The live site is published at <https://jjohnson-47.github.io/math251-fall2026-site/>. Its first experiment lets students time an accelerating ball between two movable gates, then squeeze the gates together to discover an instantaneous rate of change.
 
 This is a companion site. The course LMS remains the authority for announcements, deadlines, submissions, and grades.
 
 ## What is in the foundation
 
-- A mobile-first React course home with a keyboard-accessible calculus interaction.
+- A mobile-first React course home with a keyboard- and touch-operable ball-and-gates experiment.
+- Shareable `/play` and `/explainers` routes, plus a hand-authored explainer template with stable section anchors.
 - MDX course content with build-time MathJax CHTML, semantic assistive MathML, local fonts, and linked equation regions.
-- A typed math layer with tests, ready for more simulations and visualizations.
+- A typed math layer with tests for motion, gate timing, difference quotients, and boundary cases.
 - Vinext and Vite for React Server Components, route handlers, and library integrations.
 - Tailwind CSS and reusable shadcn interface primitives.
 - Two build targets: a static GitHub Pages publication and a worker-capable build for future APIs.
@@ -51,3 +52,5 @@ The normal `npm run build` keeps the server runtime available for route handlers
 - `tests/`: deterministic checks for mathematical and content logic.
 
 Read [AGENTS.md](AGENTS.md) before agentic work and [docs/architecture.md](docs/architecture.md) before adding a new route, API, or learning-tool family.
+
+Instructor/design handoffs that contain private course context stay local and ignored. Implement only their approved public conclusions; never add source student material to this repository.

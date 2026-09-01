@@ -1,7 +1,6 @@
 import { access, readFile, writeFile } from 'node:fs/promises';
 
 const outputDirectory = new URL('../dist/client/', import.meta.url);
-const indexFile = new URL('index.html', outputDirectory);
 const noJekyllFile = new URL('.nojekyll', outputDirectory);
 const mainMathFont = new URL(
   'mathjax/fonts/MathJax_Main-Regular.woff',
@@ -10,36 +9,112 @@ const mainMathFont = new URL(
 const socialImage = new URL('og.png', outputDirectory);
 const expectedBasePath = '/math251-fall2026-site/';
 
-await Promise.all([
-  access(indexFile),
-  access(mainMathFont),
-  access(socialImage),
-]);
+const routeChecks = [
+  {
+    route: '/',
+    file: 'index.html',
+    required: [
+      'THE BALL + THE GATES',
+      'What is calculus, and what will I be able to do?',
+      'aria-label="Gate A position"',
+      'aria-live="polite"',
+      '<mjx-container',
+      '<mjx-assistive-mml',
+    ],
+  },
+  {
+    route: '/play/',
+    file: 'play/index.html',
+    required: [
+      'Can two clocks measure one instant?',
+      'THE BALL + THE GATES',
+      'A · MEASURE ONE AVERAGE',
+      '<mjx-assistive-mml',
+    ],
+  },
+  {
+    route: '/explainers/',
+    file: 'explainers/index.html',
+    required: ['A question asked once.', 'Posted', 'Writing'],
+  },
+  {
+    route: '/explainers/what-is-calculus/',
+    file: 'explainers/what-is-calculus/index.html',
+    required: [
+      'Calculus is one limiting idea used twice.',
+      'id="the-one-move"',
+      'id="adding-up-pieces"',
+      'id="ftc"',
+      'id="tooling"',
+      'id="by-december"',
+      'id="a-student-question"',
+      'id="ask"',
+      '<table',
+      '<mjx-assistive-mml',
+    ],
+  },
+];
 
-const html = await readFile(indexFile, 'utf8');
+await Promise.all([access(mainMathFont), access(socialImage)]);
 
-if (!html.includes(expectedBasePath)) {
-  throw new Error(
-    `Static export is missing the GitHub Pages base path ${expectedBasePath}`,
-  );
+const pages = await Promise.all(
+  routeChecks.map(async (check) => {
+    const fileUrl = new URL(check.file, outputDirectory);
+    await access(fileUrl);
+    return { ...check, html: await readFile(fileUrl, 'utf8') };
+  }),
+);
+
+for (const { route, required, html } of pages) {
+  if (!html.includes(expectedBasePath)) {
+    throw new Error(
+      `${route} is missing the GitHub Pages base path ${expectedBasePath}`,
+    );
+  }
+
+  for (const marker of required) {
+    if (!html.includes(marker)) {
+      throw new Error(`${route} is missing required markup: ${marker}`);
+    }
+  }
+
+  for (const { pattern, description } of [
+    {
+      pattern:
+        /\b(?:one|two|three|four|five|six|seven|eight|nine|ten|\d+) students?\b/i,
+      description: 'a public class-member count',
+    },
+    {
+      pattern:
+        /asked by (?:one|two|three|four|five|six|seven|eight|nine|ten|\d+) of you/i,
+      description: 'counted question provenance',
+    },
+  ]) {
+    if (pattern.test(html)) {
+      throw new Error(`${route} contains ${description}`);
+    }
+  }
 }
 
+const allHtml = pages.map(({ html }) => html).join('\n');
+
 for (const requiredMathMarkup of [
-  '<mjx-container',
-  '<mjx-assistive-mml',
   '<math xmlns="http://www.w3.org/1998/Math/MathML"',
-  'href="#explore"',
   `${expectedBasePath}mathjax/fonts`,
 ]) {
-  if (!html.includes(requiredMathMarkup)) {
+  if (!allHtml.includes(requiredMathMarkup)) {
     throw new Error(
       `Static export is missing required math markup: ${requiredMathMarkup}`,
     );
   }
 }
 
+if (/mathjax[^"']*(?:\.js|cdn)/i.test(allHtml)) {
+  throw new Error('Static export appears to load MathJax in the browser');
+}
+
 const localAssetPaths = new Set(
-  [...html.matchAll(/(?:src|href)="([^"#]+)"/g)]
+  [...allHtml.matchAll(/(?:src|href)="([^"#]+)"/g)]
     .map((match) => match[1])
     .filter((assetPath) => assetPath.startsWith(expectedBasePath))
     .map((assetPath) => assetPath.slice(expectedBasePath.length)),
@@ -59,5 +134,5 @@ await Promise.all(
 
 await writeFile(noJekyllFile, '');
 console.log(
-  `GitHub Pages export, ${localAssetPaths.size} assets, and build-time MathJax verified.`,
+  `Verified ${pages.length} routes, ${localAssetPaths.size} local paths, and build-time accessible MathJax.`,
 );

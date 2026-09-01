@@ -38,3 +38,8 @@ next-env.d.ts
 /.wrangler/
 /outputs/
 /work/
+
+# Local design handoffs may contain private course context. The public site
+# implements their approved conclusions, not the source notes themselves.
+/docs/brief-*.md
+/docs/note-personal-feel.md

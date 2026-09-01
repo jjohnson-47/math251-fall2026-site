@@ -1,0 +1,207 @@
+import { AnchorHeading } from '@/components/anchor-heading';
+import { LimitTable } from '@/components/limit-table';
+import {
+  activeCalculusSectionOneOne,
+  activeCalculusSectionOneThree,
+  explainerRequestHref,
+  siteHref,
+} from '@/lib/site';
+
+<section className="explainer-section pt-10 sm:pt-14">
+  <p className="section-kicker">01 · You already measure change</p>
+  <h2 className="mt-3 font-heading text-4xl leading-[0.98] font-semibold tracking-[-0.035em] text-balance sm:text-5xl">
+    An average is the part you already know.
+  </h2>
+
+If a car travels $75$ metres in $5$ seconds, its average speed is
+
+$$
+\frac{\text{change in distance}}{\text{change in time}}
+=\frac{75\ \text{m}}{5\ \text{s}}=15\ \text{m/s}.
+$$
+
+That number tells the truth about the whole interval. It does not say how fast
+the car was moving at any one instant. Calculus begins when we ask what happens
+to the average as the interval disappears.
+
+</section>
+
+<section className="explainer-section" aria-labelledby="the-one-move">
+  <p className="section-kicker">02 · The one move</p>
+  <AnchorHeading anchor="the-one-move">Let the gap shrink.</AnchorHeading>
+
+At a single instant, the usual average-change formula asks for $0/0$. That is
+undefined, so we do not substitute zero. We calculate with nearby, nonzero
+gaps and ask whether their answers approach one number.
+
+$$
+f'(x)=\lim_{h\to 0}\frac{f(x+h)-f(x)}{h}.
+$$
+
+The limit is the formal move that makes “change at an instant” precise. This is
+why Chapter 1 spends time on limits before the derivative receives its full
+definition.
+
+<div className="not-prose mt-8">
+  <LimitTable />
+</div>
+
+  <p className="mt-6">
+    The table is the symbolic version of the{' '}
+    <a className="text-link" href={siteHref('/play/')}>
+      ball-and-gates experiment
+    </a>
+    : two positions become one point by approach, not by pretending the gap is
+    already zero.
+  </p>
+</section>
+
+<section className="explainer-section" aria-labelledby="adding-up-pieces">
+  <p className="section-kicker">03 · The same move, backwards</p>
+  <AnchorHeading anchor="adding-up-pieces">
+    Add smaller and smaller pieces.
+  </AnchorHeading>
+
+Suppose you know an object's acceleration $a(t)$ and want its change in
+velocity. Over a short time $Δt$, the change is approximately
+$a(t)\Delta t$. Chop the whole time interval into pieces, add those estimates,
+and shrink the widest piece:
+
+$$
+\Delta v=\lim_{\max \Delta t_i\to 0}
+\sum_i a(t_i)\Delta t_i
+=\int_{t_0}^{t_1} a(t)\,dt.
+$$
+
+This is not a second trick. The derivative squeezes an average until it becomes
+local; the integral squeezes a sum of approximations until it becomes exact.
+One limiting idea runs in two directions.
+
+</section>
+
+<section className="explainer-section" aria-labelledby="ftc">
+  <p className="section-kicker">04 · The Fundamental Theorems</p>
+  <AnchorHeading anchor="ftc">The two directions undo each other.</AnchorHeading>
+
+One Fundamental Theorem says that differentiating an accumulation gives back
+the rate being accumulated. The other says that a definite integral—defined
+as a limit of sums—can be evaluated with an antiderivative:
+
+$$
+\frac{d}{dx}\int_a^x f(t)\,dt=f(x),
+\qquad
+\int_a^b f(x)\,dx=F(b)-F(a).
+$$
+
+We meet these results directly in Week 14. They explain why “instantaneous
+change” and “adding tiny pieces” belong in one course rather than two unrelated
+chapters.
+
+</section>
+
+<section className="explainer-section" aria-labelledby="tooling">
+  <p className="section-kicker">05 · The tooling, and the point</p>
+  <AnchorHeading anchor="tooling">
+    Algebra is the handle, not the destination.
+  </AnchorHeading>
+
+Factoring, function notation, equations, and graphs are real requirements.
+They let us hold the ideas still long enough to work with them. But a hard
+algebra step is not a verdict about whether you understand calculus.
+
+<aside className="marg my-8">
+  <p className="marg-label">If this is the part that is bothering you</p>
+  <p>
+    Tell me which algebra move broke the chain. We can repair a tool without
+    throwing away the idea you were using it to reach.
+  </p>
+</aside>
+
+The point is to explain what changes, what accumulates, what the units say, and
+why an answer is reasonable. The symbolic tools support that explanation.
+
+</section>
+
+<section className="explainer-section" aria-labelledby="by-december">
+  <p className="section-kicker">06 · By December</p>
+  <AnchorHeading anchor="by-december">
+    You should be able to make the ideas travel.
+  </AnchorHeading>
+
+  <ul className="explainer-checklist">
+    <li>
+      Move between a situation, a graph, a formula, and units without losing the
+      meaning of the quantity.
+    </li>
+    <li>
+      Use derivatives to describe local change and integrals to recover a whole
+      from changing pieces.
+    </li>
+    <li>
+      Explain why a limit can determine an exact value even when direct
+      substitution is undefined.
+    </li>
+  </ul>
+</section>
+
+<section className="explainer-section" aria-labelledby="a-student-question">
+  <p className="section-kicker">07 · A student question</p>
+  <AnchorHeading anchor="a-student-question">
+    Does this reach all the way to curved spacetime?
+  </AnchorHeading>
+
+<blockquote className="student-question">
+  “How does finding the instantaneous slope of a curve lead down to spacetime
+  being bent like water?”
+</blockquote>
+
+Finding an instantaneous slope is one version of describing what happens
+locally, right where you are. In later mathematics, that local idea expands
+from curves to surfaces and higher-dimensional geometry. General relativity
+uses derivatives to describe how spacetime's geometry changes and how matter
+moves through it. So the derivative is an early step in the language, while
+“bent like water” is a useful picture rather than a literal description.
+
+</section>
+
+<section className="explainer-section pb-12 sm:pb-16" aria-labelledby="ask">
+  <p className="section-kicker">08 · Ask for an explainer</p>
+  <AnchorHeading anchor="ask">Name the place where the story breaks.</AnchorHeading>
+
+Notice → Try → Explain → Check is our study loop. When the Explain step will
+not come together, send me the exact question and I can turn one private
+answer into a page the whole class can use.
+
+<p>
+  I will usually post one or two explainers a week. If a question is urgent, say
+  why and it can move up. Deadlines, grades, and submissions all stay in
+  Blackboard.
+</p>
+
+  <a className="request-link not-prose" href={explainerRequestHref}>
+    Open an explainer-request email
+  </a>
+  <p className="mt-3 text-sm text-muted-foreground">
+    The draft includes a subject and two prompts. Add your instructor's course
+    email before sending.
+  </p>
+</section>
+
+<section className="book-note not-prose">
+  <p className="section-kicker">Keep reading in the open textbook</p>
+  <h2 className="mt-2 font-heading text-3xl font-semibold tracking-[-0.025em]">
+    Where this lives in Active Calculus
+  </h2>
+  <ul className="mt-5 space-y-3 leading-7">
+    <li>
+      <a className="text-link" href={activeCalculusSectionOneOne}>
+        §1.1 · How do we measure velocity?
+      </a>
+    </li>
+    <li>
+      <a className="text-link" href={activeCalculusSectionOneThree}>
+        §1.3 · The derivative of a function at a point
+      </a>
+    </li>
+  </ul>
+</section>

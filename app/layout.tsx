@@ -31,14 +31,14 @@ export const metadata: Metadata = {
     template: '%s · MATH A251',
   },
   description:
-    'A practice-first course companion for MATH A251 Calculus I, with interactive explorations, visual explanations, and room to grow.',
-  applicationName: 'MATH A251 Course Companion',
+    'The MATH A251 Calculus I course notebook: interactive experiments and explanations built from questions in this class.',
+  applicationName: 'MATH A251 Course Notebook',
   openGraph: {
     type: 'website',
     title: 'MATH A251 · Calculus I · Fall 2026',
     description:
-      'Explore change through interactive calculus labs, visual explanations, and focused practice.',
-    siteName: 'MATH A251 Course Companion',
+      'Run an experiment, squeeze two timing gates, and discover how calculus makes instantaneous change precise.',
+    siteName: 'MATH A251 Course Notebook',
     images: [
       {
         url: socialImageUrl,
@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'MATH A251 · Calculus I · Fall 2026',
     description:
-      'Explore change through interactive calculus labs, visual explanations, and focused practice.',
+      'Run an experiment, squeeze two timing gates, and discover how calculus makes instantaneous change precise.',
     images: [socialImageUrl],
   },
 };

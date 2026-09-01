@@ -1,6 +1,6 @@
 # Architecture
 
-The site begins as one polished route, but its boundaries support independent labs, practice sets, content collections, and API-backed tools without a rewrite.
+The site begins as a small course notebook with one experiment and one explainer, but its boundaries support independent labs, content collections, practice sets, and API-backed tools without a rewrite.
 
 ## Runtime shape
 
@@ -16,6 +16,15 @@ tests/                  Deterministic domain checks
 ```
 
 The public deployment is a Vinext static export on GitHub Pages. The normal Vinext build also produces a Cloudflare Worker-compatible server bundle, so future tools can add route handlers, server-side data fetching, and external APIs without changing the front-end framework.
+
+## Current routes
+
+- `/`: notebook front, ball-and-gates experiment, first abstraction, question ledger, and request entry point.
+- `/play`: a shareable full-size copy of the experiment and its guided A/B/C sequence.
+- `/explainers`: a deliberately small, manually maintained question index.
+- `/explainers/what-is-calculus`: the first long-form MDX explainer with stable, hand-authored anchors and a numeric limit table.
+
+`components/site-header.tsx` and `components/site-footer.tsx` carry the common shell. `components/ball-gate-lab.tsx` and `components/limit-table.tsx` own local interaction state; their mathematics stays in `lib/calculus.ts`. `lib/site.ts` centralizes deploy-path-aware internal URLs and verified external reading links.
 
 Course narrative can be authored in MDX. `remark-math` identifies TeX and `rehype-mathjax` renders CHTML during the build; the build also enables MathJax's assistive MathML handler. MathJax fonts are copied into `public/mathjax/fonts` before development or production builds, so the student page does not load a runtime typesetter or depend on a font CDN.
 

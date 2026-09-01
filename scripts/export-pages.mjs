@@ -59,15 +59,39 @@ for (const routePath of pathManifest.paths) {
 
   const requestPath =
     routePath === '/' ? `${basePath}/` : `${basePath}${routePath}`;
-  const response = await worker.fetch(
-    new Request(`http://localhost${requestPath}`),
-    {},
-    executionContext,
-  );
+  let requestUrl = new URL(requestPath, 'http://localhost');
+  let response;
 
-  if (!response.ok) {
+  for (let redirectCount = 0; redirectCount <= 3; redirectCount += 1) {
+    response = await worker.fetch(
+      new Request(requestUrl),
+      {},
+      executionContext,
+    );
+
+    if (![301, 302, 303, 307, 308].includes(response.status)) {
+      break;
+    }
+
+    const location = response.headers.get('location');
+    if (!location) {
+      break;
+    }
+
+    const nextUrl = new URL(location, requestUrl);
+    if (
+      nextUrl.origin !== 'http://localhost' ||
+      !nextUrl.pathname.startsWith(basePath)
+    ) {
+      throw new Error(`Unsafe static render redirect: ${nextUrl}`);
+    }
+
+    requestUrl = nextUrl;
+  }
+
+  if (!response?.ok) {
     throw new Error(
-      `Static render failed for ${requestPath}: ${response.status} ${response.statusText}`,
+      `Static render failed for ${requestPath}: ${response?.status} ${response?.statusText}`,
     );
   }
 
