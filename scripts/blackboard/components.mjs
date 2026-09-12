@@ -41,7 +41,7 @@ export const REVEAL = 'details';
  * point of the reversal, and the line and the link above the frame still say
  * what the missing thing was. Open the URL yourself before pasting.
  */
-export const WIDGET_DEPLOYED = false;
+export const WIDGET_DEPLOYED = true; // verified live 2026-09-12: widget renders "Slopes at a corner", gap 0.5/0.1/0.01, slopes -1 and 1
 
 // Measured 2026-09-12, Chromium 148.0.7778.96, over HTTP at the production
 // subpath. The number is the tallest state reachable by sweeping all 13 slider
@@ -75,6 +75,35 @@ const FRAME_SHELL =
 const FRAME_BAR = 'background:#1f3864;padding:9px 13px';
 const FRAME_BAR_LINK = 'color:#fff;text-decoration:underline';
 const FRAME_NOTE = 'margin-bottom:0;color:#555;font-size:0.95rem';
+const CARD_LINK =
+  'display:block;max-width:480px;margin:14px 0;border:1px solid #cfd8e3;' +
+  'border-radius:8px;overflow:hidden;background:#ffffff;text-decoration:none;' +
+  'color:#202124';
+const POSTER_WRAP = 'position:relative;display:block';
+const POSTER_IMG =
+  'display:block;width:100%;max-width:480px;height:auto;border:0';
+// A play badge built from a border triangle inside a disc. No glyph, because a
+// geometric-shape character renders as an emoji on some platforms and as a box
+// on others; no inline SVG, because this is simpler and needs no title; no
+// script, because a Document runs none. If the sanitiser strips `position` the
+// two spans fall below the image as a disc and a triangle, which is odd but
+// not broken.
+const BADGE_DISC =
+  // margin is half the LAID-OUT box: 54px wide plus a 2px border on each
+  // side is 58, so -29 and not -27. At -27 the disc sat 2px low and 2px
+  // right of the image centre.
+  'position:absolute;top:50%;left:50%;margin:-29px 0 0 -29px;display:block;' +
+  'width:54px;height:54px;border-radius:50%;background:#1f3864;' +
+  'border:2px solid #ffffff';
+const BADGE_TRIANGLE =
+  'position:absolute;top:50%;left:50%;margin:-13px 0 0 -7px;display:block;' +
+  'width:0;height:0;border-top:13px solid transparent;' +
+  'border-bottom:13px solid transparent;border-left:20px solid #ffffff';
+const CARD_BODY = 'display:block;padding:10px 12px';
+const CARD_TITLE =
+  'display:block;font-weight:700;color:#1f3864;text-decoration:underline';
+const CARD_NOTE = 'display:block;margin-top:3px;color:#555;font-size:0.95rem';
+
 const REVEAL_SHELL =
   'margin:12px 0;border:1px solid #cfd8e3;border-radius:6px;background:#ffffff';
 const REVEAL_SUMMARY =
@@ -226,23 +255,58 @@ export function blackboardComponents({ slug, routeUrl }) {
         h('a', { href, target: '_blank', rel: 'noopener' }, label),
       ),
 
-    VideoResource: ({ title, duration, watchHref, captionStatus }) =>
+    // One card, one link. The thumbnail is served from this site, never from
+    // i.ytimg.com: a Document that hotlinks Google makes every page view a
+    // request to Google, which is the thing the youtube-nocookie rule exists
+    // to stop and the reason these two videos are not embedded at all.
+    VideoResource: ({
+      title,
+      duration,
+      watchHref,
+      captionStatus,
+      videoId,
+      posterAlt,
+    }) =>
       h(
-        Fragment,
-        null,
+        'a',
+        {
+          href: watchHref,
+          target: '_blank',
+          rel: 'noopener',
+          style: parseStyle(CARD_LINK),
+        },
         h(
-          'p',
-          null,
-          h(
-            'a',
-            { href: watchHref, target: '_blank', rel: 'noopener' },
-            h('b', null, `Watch ${title} on YouTube`),
-          ),
+          'span',
+          { style: parseStyle(POSTER_WRAP) },
+          h('img', {
+            src: `${ASSET_BASE}/media/video/${videoId}.jpg`,
+            alt: posterAlt,
+            width: '480',
+            height: '270',
+            style: parseStyle(POSTER_IMG),
+          }),
+          h('span', {
+            'aria-hidden': 'true',
+            style: parseStyle(BADGE_DISC),
+          }),
+          h('span', {
+            'aria-hidden': 'true',
+            style: parseStyle(BADGE_TRIANGLE),
+          }),
         ),
         h(
-          'p',
-          { style: parseStyle(FRAME_NOTE) },
-          `${duration}. ${captionStatus} The video opens in a new tab; this page does not load YouTube on its own.`,
+          'span',
+          { style: parseStyle(CARD_BODY) },
+          h(
+            'span',
+            { style: parseStyle(CARD_TITLE) },
+            `Watch ${title} on YouTube`,
+          ),
+          h(
+            'span',
+            { style: parseStyle(CARD_NOTE) },
+            `${duration}. ${captionStatus} The video opens in a new tab; this page does not load YouTube on its own.`,
+          ),
         ),
       ),
 

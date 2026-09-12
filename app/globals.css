@@ -1065,18 +1065,84 @@
 
 .embed-resource {
   margin: 0.85rem 0 0;
-  border: 1px solid color-mix(in oklch, var(--foreground) 13%, transparent);
-  border-radius: 0.55rem;
-  background: var(--background);
-  padding: 0.75rem 0.85rem;
 }
 
-.embed-resource-link {
+/* The whole card is one link. Only the title is underlined, so the card reads
+ * as a thing to click rather than as a wall of link text. */
+.embed-resource-card {
+  display: block;
+  max-width: 480px;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--foreground) 14%, transparent);
+  border-radius: 0.55rem;
+  background: var(--card);
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.embed-resource-card:focus-visible {
+  outline: 3px solid color-mix(in oklch, var(--ring) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.embed-resource-poster {
+  position: relative;
+  display: block;
+}
+
+.embed-resource-poster img {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  border: 0;
+}
+
+/* A play badge drawn from a border triangle rather than a glyph or an icon
+ * font: the same markup has to render inside a Blackboard Document, which
+ * carries no stylesheet of ours and no script at all. */
+.embed-resource-badge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 54px;
+  height: 54px;
+  /* Half the laid-out box, which is 54 plus the 2px border on each side. */
+  margin: -29px 0 0 -29px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--primary) 88%, black);
+}
+
+.embed-resource-badge::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  margin: -13px 0 0 -7px;
+  border-top: 13px solid transparent;
+  border-bottom: 13px solid transparent;
+  border-left: 20px solid #ffffff;
+  content: '';
+}
+
+.embed-resource-body {
+  display: block;
+  padding: 0.6rem 0.75rem;
+}
+
+.embed-resource-title {
+  display: block;
+  color: var(--primary);
   font-weight: 700;
+  text-decoration: underline;
 }
 
 .embed-resource-note {
-  margin: 0.4rem 0 0;
+  display: block;
+  margin-top: 0.2rem;
   color: var(--muted-foreground);
   font-size: 0.9rem;
 }

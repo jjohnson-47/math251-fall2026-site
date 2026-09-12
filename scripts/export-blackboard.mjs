@@ -45,6 +45,7 @@ import {
   blackboardComponents,
 } from './blackboard/components.mjs';
 import { RENDER, assertAltSane } from './blackboard/math.mjs';
+import { PANEL_PX, panel } from './blackboard/panel.mjs';
 
 const projectRoot = new URL('../', import.meta.url);
 const outputDirectory = new URL(
@@ -59,12 +60,14 @@ const SECTIONS = [
     slug: 'section-1-7',
     source: 'content/week4/section-1-7.mdx',
     file: 'section-1-7__BB.html',
+    panelFile: 'section-1-7__IFRAME.html',
     title: 'Limits, Continuity, and Differentiability (Section 1.7)',
   },
   {
     slug: 'ivt-openstax',
     source: 'content/week4/ivt-openstax.mdx',
     file: 'ivt-openstax__BB.html',
+    panelFile: 'ivt-openstax__IFRAME.html',
     title:
       'Continuity and the Intermediate Value Theorem (OpenStax supplement)',
   },
@@ -72,6 +75,7 @@ const SECTIONS = [
     slug: 'section-1-8',
     source: 'content/week4/section-1-8.mdx',
     file: 'section-1-8__BB.html',
+    panelFile: 'section-1-8__IFRAME.html',
     title: 'The Tangent Line Approximation (Section 1.8)',
   },
 ];
@@ -218,10 +222,13 @@ async function renderSection(section) {
 /**
  * Everything a Blackboard Document forbids, checked over the emitted markup
  * rather than over the source. The artifact is what gets pasted.
+ *
+ * Both outputs go through this. What differs between a native fragment and a
+ * panel block is checked separately below.
  */
-function validate(section, html) {
+function validateCommon(name, html) {
   const fail = (message) => {
-    throw new Error(`${section.file}: ${message}`);
+    throw new Error(`${name}: ${message}`);
   };
 
   if (/<script/i.test(html))
@@ -270,7 +277,13 @@ function validate(section, html) {
     if (!/\stitle="[^"]*[^\s"][^"]*"/.test(tag)) {
       fail(`an iframe with no title: ${tag.slice(0, 90)}`);
     }
-    if (!/\sheight="\d+"/.test(tag)) {
+    // A fixed pixel height, in EITHER form. The fragment's own frames carry a
+    // height attribute; the panel block reproduced from math_assets.panel()
+    // puts it in the style instead. The rule is that the height is a whole
+    // number of pixels and never a viewport unit, not which spelling it uses.
+    const attributeHeight = /\sheight="\d+"/.test(tag);
+    const styleHeight = /height:\s*\d+px/.test(tag);
+    if (!attributeHeight && !styleHeight) {
       fail(`an iframe with no fixed pixel height: ${tag.slice(0, 90)}`);
     }
   }
@@ -309,11 +322,73 @@ function validate(section, html) {
     }
   }
 
-  if (!html.startsWith('<div style="background:linear-gradient')) {
-    fail('the fragment must open with the Week 4 card shell');
+  // An image needs an alt key, and a real one. Empty alt is correct for a
+  // decorative image; the thumbnails are not decorative, they are the only
+  // thing on the card that says "this is a video", so each carries a sentence.
+  for (const [tag] of html.matchAll(/<img\b[^>]*>/g)) {
+    if (!/\salt="/.test(tag)) {
+      fail(`an image with no alt attribute: ${tag.slice(0, 90)}`);
+    }
+    if (/\salt="\s*(?:video )?thumbnail\s*"/i.test(tag)) {
+      fail(
+        `an image whose alt names the element instead of the content: ` +
+          `${tag.slice(0, 90)}`,
+      );
+    }
+    if (!/\swidth="\d+"/.test(tag) || !/\sheight="\d+"/.test(tag)) {
+      fail(
+        `an image with no fixed pixel dimensions. Blackboard reserves space ` +
+          `from the attributes: ${tag.slice(0, 90)}`,
+      );
+    }
   }
+
   if (RENDER === 'svg' && /<svg\b(?![^>]*>[\s\S]*?<title)/.test(html)) {
     fail('an inline SVG with no title');
+  }
+}
+
+/** The native fragment: the whole reading, inside the Week 4 card shell. */
+function validateFragment(name, html) {
+  validateCommon(name, html);
+  if (!html.startsWith('<div style="background:linear-gradient')) {
+    throw new Error(
+      `${name}: the fragment must open with the Week 4 card shell`,
+    );
+  }
+}
+
+/**
+ * The panel block: that block and nothing else, so the file is
+ * open-select-all-copy.
+ */
+function validatePanel(name, html) {
+  validateCommon(name, html);
+  const fail = (message) => {
+    throw new Error(`${name}: ${message}`);
+  };
+
+  const frames = (html.match(/<iframe\b/g) ?? []).length;
+  const anchors = (html.match(/<a\b/g) ?? []).length;
+  if (frames !== 1) fail(`${frames} iframes; a panel block holds exactly one`);
+  if (anchors !== 1)
+    fail(`${anchors} anchors; a panel block holds exactly one`);
+
+  // The link goes ABOVE the frame so a phone reader meets the way out before
+  // the scroll region. math_assets.assert_assets() checks the same thing.
+  if (html.indexOf('<a href=') > html.indexOf('<iframe')) {
+    fail('the link must sit above the frame, not below it');
+  }
+  if (!html.includes(`height:${PANEL_PX}px`)) {
+    fail(`the frame must be ${PANEL_PX}px, the height a lesson page takes`);
+  }
+  if (html.includes('linear-gradient')) {
+    fail('a panel block carries the block alone, not the fragment card shell');
+  }
+
+  const bytes = Buffer.byteLength(html);
+  if (bytes >= 2048) {
+    fail(`${bytes} bytes; a panel block is a paste block, not a page`);
   }
 }
 
@@ -330,24 +405,51 @@ async function main() {
 
   const written = [];
   for (const section of SECTIONS) {
-    const html = await renderSection(section);
-    validate(section, html);
-    const target = new URL(section.file, outputDirectory);
-    if (!check) await writeFile(target, html, 'utf8');
-    written.push({ ...section, bytes: Buffer.byteLength(html) });
+    // Two outputs per section, both correct, neither preferred. The fragment
+    // pastes the reading in as native page content; the panel block frames the
+    // route instead. Jeffrey picks per Document at paste time.
+    const fragment = await renderSection(section);
+    validateFragment(section.file, fragment);
+
+    const block = panel(section.slug, ASSET_BASE);
+    validatePanel(section.panelFile, block);
+
+    if (!check) {
+      await writeFile(new URL(section.file, outputDirectory), fragment, 'utf8');
+      await writeFile(
+        new URL(section.panelFile, outputDirectory),
+        block,
+        'utf8',
+      );
+    }
+    written.push({
+      ...section,
+      bytes: Buffer.byteLength(fragment),
+      panelBytes: Buffer.byteLength(block),
+    });
   }
 
   console.log(
     `Math renderer: ${RENDER}. Predict-reveals: ${REVEAL}. ` +
       `Widget frame: ${WIDGET_FRAME_PX}px, deployed=${WIDGET_DEPLOYED}.`,
   );
+  const verb = check ? 'checked' : 'wrote';
   for (const section of written) {
     console.log(
-      `  ${check ? 'checked' : 'wrote'} ${section.file.padEnd(26)} ${String(
-        section.bytes,
-      ).padStart(7)} bytes  ${section.title}`,
+      `  ${verb} ${section.file.padEnd(26)} ${String(section.bytes).padStart(7)}` +
+        ` bytes  ${section.title}`,
+    );
+    console.log(
+      `  ${verb} ${section.panelFile.padEnd(26)} ${String(
+        section.panelBytes,
+      ).padStart(7)} bytes  the same page as a ${PANEL_PX}px panel block`,
     );
   }
+  console.log(
+    '\n  Two outputs per section. The __BB fragment pastes the reading in as\n' +
+      '  native page content; the __IFRAME block frames the route instead. Both\n' +
+      '  are correct and each file is open-select-all-copy; pick per Document.',
+  );
   if (!WIDGET_DEPLOYED) {
     console.log(
       '\n  The corner-slopes widget route is NOT DEPLOYED. The frame in the 1.7\n' +

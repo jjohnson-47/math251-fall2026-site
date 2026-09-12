@@ -368,12 +368,20 @@ Found by the first build, 2026-09-12. Do not rediscover these.
   frame — invisible to anyone who checked a laptop and a phone. Sweep the whole
   width range, take the maximum, add 40. A widget that scrolls inside its frame is
   a failed widget.
-- **A class rule must see MathJax's own output.** The fragment validator reported
-  zero class attributes on pages that carry ten: MathJax's MathML emits
-  `class="ORD"`, `class="OP"`, `class="NONE"`. Those are inert without a
-  stylesheet so nothing renders wrong, but the rule exists to catch a class that
-  _does_ need CSS, and it currently has a hole. Close it — count them and
-  allowlist the MathJax tokens explicitly rather than not seeing them.
+- ~~**A class rule must see MathJax's own output.**~~ **WITHDRAWN 2026-09-12,
+  and it is worth reading why.** The entry claimed the fragment validator
+  reported zero class attributes on pages carrying ten, because MathJax's
+  MathML emits `class="ORD"`, `class="OP"`, `class="NONE"`. It does not. Those
+  strings are the tails of `data-mjx-texclass="ORD"` and friends — a data
+  attribute, which needs no stylesheet and is not a class. The finding came from
+  `grep -o 'class="[^"]*"'`, which happily matches the middle of an attribute
+  name. Measured: `section-1-8__BB.html` has **0** matches for
+  `/(?:^|\s)class\s*=/` and **10** for `data-mjx-texclass=`; the other fragments
+  are 0 and 2, and 0 and 4. The validator's `/\sclass=/i` is correct and has no
+  hole. Closing this "hole" would have meant allowlisting tokens that never
+  appear, which is how a rule quietly stops catching the thing it is for. Same
+  lesson as the date grep two sections down: match the shape of the thing, with
+  its boundaries, not a substring of it.
 
 ## Evidence rules
 

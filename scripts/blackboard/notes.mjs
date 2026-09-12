@@ -44,11 +44,25 @@ script, no stylesheet, no class names, no viewport units, nothing root-relative.
 Only the interactive graph keeps a frame, and it sits inside the 1.7 reading at
 the point where the corner is discussed.
 
+TWO OUTPUTS PER SECTION. YOU PICK.
+${'-'.repeat(78)}
+  <slug>__BB.html      The reading, pasted in as native Blackboard content.
+                       Full width, no nested scroll, nothing to load.
+  <slug>__IFRAME.html  The same page in a 720px frame instead: a blurb, a navy
+                       bar with a full-screen link, the frame, and a line about
+                       scrolling inside it.
+
+Both are correct and neither replaces the other. The fragment is what the
+reversal of 2026-09-12 was about, and it is the one that does not depend on a
+deploy. The frame keeps the page and the Document in step automatically, which
+is worth something when a page is still being edited. Each file holds only its
+own block, so either one is open, select all, copy.
+
 PASTE ORDER
 ${'-'.repeat(78)}
-  1.  section-1-7__BB.html    Limits, Continuity, and Differentiability (Section 1.7)
-  2.  ivt-openstax__BB.html   Continuity and the Intermediate Value Theorem (OpenStax supplement)
-  3.  section-1-8__BB.html    The Tangent Line Approximation (Section 1.8)
+  1.  section-1-7      Limits, Continuity, and Differentiability (Section 1.7)
+  2.  ivt-openstax     Continuity and the Intermediate Value Theorem (OpenStax supplement)
+  3.  section-1-8      The Tangent Line Approximation (Section 1.8)
 
 The overview students already have sends them to the supplement straight after
 1.7, so that is the order the Documents go in.
@@ -94,7 +108,26 @@ The reading does not depend on it. The line and the link above the frame say
 what the graph is for, so a student who never loads it still has the sentence.
 
 `
-}WHAT IS IN EACH FILE
+}DO THIS BEFORE PASTING EITHER 1.7 OR 1.8: PUSH THE THUMBNAILS
+${'-'.repeat(78)}
+Each video block now carries a thumbnail card. The image is SELF-HOSTED, not
+hotlinked from i.ytimg.com, so that a Document does not make every page view a
+request to Google. The two files are
+
+  math251/public/media/video/cSXE_QpiWrY.jpg   640x360, 19 KB
+  math251/public/media/video/X0qVfMokn84.jpg   640x360, 23 KB
+
+and the fragments reference them at
+
+  ${ASSET_BASE}/media/video/<id>.jpg
+
+Checked 2026-09-12: both of those URLs return 404. They are in the working copy
+and in dist/client, but nothing has been committed or pushed, so until the Pages
+workflow runs for a commit containing them a pasted fragment shows a broken
+image where the thumbnail should be. The rest of the block still reads: the
+title, the duration, the caption caveat and the link are all text.
+
+WHAT IS IN EACH FILE
 ${'-'.repeat(78)}
 Every word of the reading is in the Document. The full-screen route still
 exists and each fragment ends with a link to it, but only as a convenience for
@@ -116,6 +149,11 @@ ${'-'.repeat(78)}
   section-1-8   Desmos, ln(x) and its tangent line        420px
   section-1-8   Desmos, choose your own function          420px
   section-1-7   Slopes at a corner (course widget)        ${String(WIDGET_FRAME_PX).padStart(3)}px
+  __IFRAME.html Whole page in a panel                     720px
+
+The thumbnail card is 482 x 382 px at a 1100px column and 278 x 318 px at a
+390px one: the image carries width and height attributes so Blackboard reserves
+the space, plus max-width so a phone column shrinks it rather than overflowing.
 
 The widget frame is its tallest measured state plus 40. Every slider position
 was swept against every gap setting at thirteen widths from 280px to 1026px:
