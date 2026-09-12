@@ -1,0 +1,27 @@
+{
+  "reviewed_on": "2026-09-11",
+  "timezone": "America/Anchorage",
+  "method": "Machine check, not a human player check. Fetched each watch page over plain HTTPS and read the caption track list out of the page's own ytInitialPlayerResponse: name, languageCode, and kind, where kind \"asr\" means automatic speech recognition. Duration comes from lengthSeconds in the same response. Nobody opened the player, played the video, or inspected Settings > Subtitles/CC, and no caption text was read, so this establishes which tracks are served and nothing about their accuracy.",
+  "rule": "A video may be embedded only once an English caption track that is not labelled auto-generated has been confirmed. Until then it is offered as a plain link, and the page teaches the material in text.",
+  "retained_embeds": {},
+  "removed_embeds": {
+    "cSXE_QpiWrY": {
+      "title": "Math 251 - Activity 1.7.3 - Limits and Continuity",
+      "duration": "7:24",
+      "length_seconds": 444,
+      "caption_tracks": ["English (auto-generated), kind=asr"],
+      "caption_track": "English (auto-generated)",
+      "asset": "section-1-7",
+      "reason": "The watch page serves exactly one caption track and it is the automatic one, so the rule above is not met. Offered as a link; the page teaches the same material in text. The channel is the course instructor's own, so uploading a corrected caption track would clear this and allow the embed."
+    },
+    "X0qVfMokn84": {
+      "title": "Math 251 - Linear Approximations",
+      "duration": "8:05",
+      "length_seconds": 485,
+      "caption_tracks": ["English (auto-generated), kind=asr"],
+      "caption_track": "English (auto-generated)",
+      "asset": "section-1-8",
+      "reason": "The watch page serves exactly one caption track and it is the automatic one, so the rule above is not met. Offered as a link; the page teaches the same material in text. The channel is the course instructor's own, so uploading a corrected caption track would clear this and allow the embed."
+    }
+  }
+}

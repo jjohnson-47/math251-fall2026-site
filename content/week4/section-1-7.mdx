@@ -1,0 +1,159 @@
+import { CornerSlopeLab } from '@/components/corner-slope-lab';
+import { EmbedCard } from '@/components/embed-card';
+import { PredictReveal } from '@/components/embed-check';
+import { EmbedLink } from '@/components/embed-link';
+import { EmbedNav } from '@/components/embed-nav';
+import { ReadingLine } from '@/components/embed-reading';
+import { VideoResource } from '@/components/embed-video';
+import { WriteFirst } from '@/components/embed-write-first';
+import { activeCalculusSectionOneSeven } from '@/lib/embed-routes';
+
+# Limits, Continuity, and Differentiability (Section 1.7)
+
+For three weeks you have computed derivatives and read what they mean. This
+section asks the question sitting underneath all of it: **when does a derivative
+exist at all?** The answer is more interesting than yes-or-no, and it turns on
+the difference between a function being unbroken and a function being smooth.
+
+<ReadingLine
+  href={activeCalculusSectionOneSeven}
+  label="Active Calculus Section 1.7: Limits, continuity, and differentiability"
+/>
+
+<EmbedCard
+  anchor="three-conditions"
+  title="Continuity, in three separate conditions"
+  tone="note"
+>
+
+A function $f$ is continuous at $x = a$ when all three of these hold:
+
+1. $f(a)$ is defined. The function has a value there at all.
+2. The limit of $f(x)$ as $x$ approaches $a$ exists. The function is heading
+   somewhere from both sides, and to the same place.
+3. Those two agree. Where the function is heading is where it actually is.
+
+They are listed separately on purpose. When continuity fails, you should be able
+to say **which one** failed, because each failure looks different on a graph and
+means something different about the situation being modelled.
+
+</EmbedCard>
+
+<EmbedCard anchor="two-failures" title="Two ways it fails" tone="warn">
+
+**A removable discontinuity** breaks condition 3. The limit exists and the
+function value is simply in the wrong place, or missing. There is a hole, and
+one repaired value fixes it.
+
+**A jump discontinuity** breaks condition 2. The one-sided limits both exist and
+disagree, so there is no single limit. No repair fixes this one; the function
+genuinely goes to two different places depending on which side you arrive from.
+
+</EmbedCard>
+
+<EmbedCard anchor="video" title="Video" tone="quiet">
+
+A guided walk through Activity 1.7.3 from the reading. Work the activity
+yourself first and use the video to check your thinking.
+
+<VideoResource
+  captionStatus="YouTube offers only an automatic English caption track for it, and that track has not been checked for accuracy."
+  duration="7 minutes 24 seconds"
+  title="Math 251 - Activity 1.7.3 - Limits and Continuity"
+  watchHref="https://www.youtube.com/watch?v=cSXE_QpiWrY"
+/>
+
+Everything in the video is also on this page and in the reading, so you can
+**read instead of watching** if your connection is slow or your network blocks
+YouTube.
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="differentiable-is-stronger"
+  title="Differentiable is stronger than continuous"
+  tone="note"
+>
+
+**If $f$ is differentiable at $a$, then $f$ is continuous at $a$.** That
+direction always holds: a function with a well-defined slope at a point cannot
+be broken there.
+
+**The converse is false, and that is the point of this section.** Continuity
+buys you an unbroken graph. It does not buy you a slope.
+
+The example to keep in your head is $g(x) = |x - 2|$ at $x = 2$. Nothing is
+broken and nothing jumps, so it is continuous. But approach the corner from the
+left and the slope is $-1$; approach from the right and it is $+1$. The
+difference quotients disagree, so there is no single derivative. A corner is
+continuous and not differentiable.
+
+</EmbedCard>
+
+<CornerSlopeLab />
+
+<EmbedCard anchor="predict" title="Predict, then check" tone="quiet">
+
+Answer each one in your head first, then open it.
+
+<PredictReveal question="A graph has a hole at one point that a single repaired value would fill. Which of the three conditions failed?">
+
+Condition 3, and only condition 3. The limit exists, so condition 2 holds, and
+the function value is either missing or sitting somewhere else. Where the
+function is heading and where it actually is have come apart. That is a
+removable discontinuity, and one repaired value fixes it.
+
+</PredictReveal>
+
+<PredictReveal question="Is a function that is continuous at a point automatically differentiable there?">
+
+No, and that is the whole point of the section. Continuity buys an unbroken
+graph and nothing more. The function $g(x) = |x - 2|$ is continuous at $x = 2$,
+but the difference quotients give $-1$ from the left and $+1$ from the right, so
+there is no single number for the slope to be.
+
+</PredictReveal>
+
+<PredictReveal question="A function is differentiable at x = 4. Can it be discontinuous there?">
+
+No. Differentiability at a point forces continuity at that point, so a function
+with a well-defined slope at $x = 4$ cannot be broken at $x = 4$. The
+implication runs in that direction only, and the converse fails at every corner.
+
+</PredictReveal>
+
+</EmbedCard>
+
+<EmbedCard anchor="write-first" title="Say why the corner has no derivative" tone="quiet">
+
+<WriteFirst
+  anchor="corner-explanation"
+  prompt="Write one sentence explaining, to someone who has just drawn the graph of g(x) = |x − 2|, why there is no derivative at x = 2."
+  selfCheck="Does your sentence name both sides, or only describe the picture?"
+>
+
+One possible explanation: **the difference quotients approach $-1$ from the left
+and $+1$ from the right, so there is no single number for the slope to be.**
+Your wording can be different.
+
+Check that your sentence names the two sides and the two different values.
+“It has a sharp point” describes the picture without saying what fails, and
+“it is not smooth” names the conclusion rather than the reason.
+
+Now revise your sentence so that somebody could check it without looking at the
+graph.
+
+</WriteFirst>
+
+</EmbedCard>
+
+<EmbedCard anchor="what-to-do" title="What to be able to do">
+
+Given a function and a point, decide whether it is continuous there and say
+which condition fails if not. Decide whether it is differentiable there, and
+justify a “no” with one-sided difference quotients rather than by pointing at
+the picture. Make sure you can explain why the corner you meet here is one.
+
+</EmbedCard>
+
+<EmbedNav current="section-1-7" />

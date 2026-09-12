@@ -1,0 +1,128 @@
+import { EmbedCard } from '@/components/embed-card';
+import { PredictReveal } from '@/components/embed-check';
+import { EmbedLink } from '@/components/embed-link';
+import { EmbedNav } from '@/components/embed-nav';
+import { WriteFirst } from '@/components/embed-write-first';
+import { openStaxContinuity } from '@/lib/embed-routes';
+
+# Continuity and the Intermediate Value Theorem
+
+A short supplement. Active Calculus does not cover the Intermediate Value
+Theorem or one-sided limit notation, and both are on our course outline, so this
+page fills the gap. Read it right after 1.7, while the continuity conditions are
+fresh. Source: <EmbedLink href={openStaxContinuity}>OpenStax Calculus Volume 1,
+Section 2.4</EmbedLink>.
+
+<EmbedCard
+  anchor="one-sided-limits"
+  title="One-sided limits, and the notation for them"
+  tone="note"
+>
+
+$\lim_{x \to a^-} f(x)$ is the value $f$ approaches coming from the **left**;
+$\lim_{x \to a^+} f(x)$ is from the **right**.
+
+The two-sided limit exists exactly when both one-sided limits exist **and
+agree**. That is the precise version of condition 2 from Section 1.7, and it is
+the tool you use to prove a jump discontinuity is a jump: show the two sides go
+to different places.
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="the-theorem"
+  title="The Intermediate Value Theorem"
+  tone="warn"
+>
+
+**If $f$ is continuous on the closed interval $[a, b]$, and $N$ is any number
+between $f(a)$ and $f(b)$, then there is at least one $c$ in $(a, b)$ with
+$f(c) = N$.**
+
+In words: a continuous function cannot get from one value to another without
+passing through everything in between. It is the first _existence_ theorem in
+this course — it promises that something is there without telling you how to
+find it.
+
+**Read the hypotheses, because they do the work.** Continuous, and on a
+**closed** interval. Drop continuity and a jump can step straight over $N$.
+
+</EmbedCard>
+
+<EmbedCard anchor="using-it" title="Using it, and the three things it does not say" tone="quiet">
+
+To show $x^3 + x = 5$ has a solution between $1$ and $2$: let $f(x) = x^3 + x$,
+note it is a polynomial and therefore continuous on $[1, 2]$, compute $f(1) = 2$
+and $f(2) = 10$, and observe that $5$ lies between them. The theorem does the
+rest.
+
+**What it does not tell you:**
+
+1. **Where.** It gives existence, not a value. Finding $c$ is a different job.
+2. **How many.** “At least one” is the whole claim; there may be several.
+3. **Anything at all when the hypotheses fail.** If the function is
+   discontinuous, the theorem is silent — not false, silent. A solution might
+   still exist.
+
+Claiming any of those three is the standard error, precisely because saying the
+theorem correctly is harder than using it.
+
+</EmbedCard>
+
+<EmbedCard anchor="predict" title="Predict, then check" tone="quiet">
+
+Answer each one in your head first, then open it.
+
+<PredictReveal question="f is continuous on the interval from 0 to 3, with f(0) = −2 and f(3) = 4. Does f(x) = 0 have a solution strictly between 0 and 3?">
+
+Yes, at least one. The value $0$ lies between $-2$ and $4$, and $f$ is
+continuous on the closed interval, so the hypotheses hold and the theorem
+applies. It still does not tell you where the solution is, and it does not tell
+you there is only one.
+
+</PredictReveal>
+
+<PredictReveal question="For f(x) = x³ + x on the interval from 1 to 2, how many solutions of f(x) = 5 does the theorem promise?">
+
+At least one. “At least one” is the entire promise. There does happen to be
+exactly one here, because $x^3 + x$ is strictly increasing, but that is a
+separate argument about this particular function — the theorem never makes it
+for you.
+
+</PredictReveal>
+
+<PredictReveal question="A discontinuous function jumps straight over N. Does that make the theorem false?">
+
+No — silent. The hypotheses fail, so the theorem makes no claim at all about
+that function. Silent is not the same as false: a solution might still exist,
+and finding out would take a different argument.
+
+</PredictReveal>
+
+</EmbedCard>
+
+<EmbedCard anchor="write-first" title="Name what the theorem leaves out" tone="quiet">
+
+<WriteFirst
+  anchor="ivt-explanation"
+  prompt="Write one sentence naming something the Intermediate Value Theorem does not tell you, and why that absence matters."
+  selfCheck="Does your sentence name something missing, or restate the theorem?"
+>
+
+One possible explanation: **it promises that a solution exists somewhere inside
+the open interval, but never says where it is or how many there are.** Your
+wording can be different.
+
+Check that your sentence names an absence. Restating the conclusion is the most
+common answer, and it does not answer the question. Watch for the third omission
+too: when the hypotheses fail the theorem is silent rather than false, so a
+discontinuous function may still have the solution you are looking for.
+
+Now revise your sentence so it names the absence and says what it would cost you
+to forget it.
+
+</WriteFirst>
+
+</EmbedCard>
+
+<EmbedNav current="ivt-openstax" />

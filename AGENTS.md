@@ -28,6 +28,17 @@ This repository publishes a public learning companion for MATH A251 Calculus I, 
 - Preserve both deployment targets: `npm run build` for worker/API capability and `npm run build:pages` for the public static site.
 - A public page must not depend on a server route without a meaningful static or error fallback.
 
+## Blackboard embeds
+
+Some routes are published to be read inside a Blackboard Ultra Document, in a fixed 720px panel with a link above it. Before building or changing one, read `docs/blackboard-embeds.md` and the sibling implementation it points at in `../stat253`. That system already exists and works; this repo ports it rather than redesigning it. The constraints are not style choices — several are recorded there as first attempts that were wrong.
+
+- A Blackboard Document runs no JavaScript. The pasted block is a link and a frame, nothing else. Everything interactive lives in the child page, which is a real browser context.
+- Embed routes render under `app/embed/` without the site shell, lead with a paragraph of real prose, and never open with a video. The first block of real prose must begin within 288px of the top at 1100px width.
+- Slugs are term-independent and permanent. They are baked into iframe `src` attributes in every LMS section, so renaming one is an LMS edit in every shell.
+- No dates, deadlines, or assignment problems on this site. The LMS is authoritative for those, and this repository is public.
+- Embed URLs are generated in the companion `../build` repository, never hand-typed into Blackboard.
+- Evidence is a number someone else can reproduce. Report what you did not do as well as what you did, and never claim a browser or LMS check you did not run.
+
 ## Definition of done
 
 Run these before committing:

@@ -1,0 +1,174 @@
+import { EmbedCard } from '@/components/embed-card';
+import { PredictReveal } from '@/components/embed-check';
+import { GraphEmbed } from '@/components/embed-graph';
+import { EmbedLink } from '@/components/embed-link';
+import { EmbedNav } from '@/components/embed-nav';
+import { ReadingLine } from '@/components/embed-reading';
+import { VideoResource } from '@/components/embed-video';
+import { WriteFirst } from '@/components/embed-write-first';
+import { activeCalculusSectionOneEight } from '@/lib/embed-routes';
+
+# The Tangent Line Approximation (Section 1.8)
+
+Here is what the derivative is _for_. Near a point, the tangent line is the best
+straight-line stand-in for the function, and a straight line is something you can
+evaluate in your head. This idea — replace something complicated with something
+linear, close to a point — is what most of the rest of the course is built on.
+
+<ReadingLine
+  href={activeCalculusSectionOneEight}
+  label="Active Calculus Section 1.8: The tangent line approximation"
+/>
+
+<EmbedCard anchor="linearization" title="The linearization" tone="note">
+
+$$
+L(x) = f(a) + f'(a)(x - a)
+$$
+
+Three pieces, and it is worth naming them: $f(a)$ is where the line starts,
+$f'(a)$ is its slope, and $(x - a)$ is how far you have travelled from the point
+of tangency. The arithmetic is easy. Deciding which number goes where is the
+part worth practising.
+
+</EmbedCard>
+
+<EmbedCard anchor="video" title="Video" tone="quiet">
+
+An introduction to the tangent line approximation. Watch it before the worked
+example below, or read the example first and use the video as a second pass.
+
+<VideoResource
+  captionStatus="YouTube offers only an automatic English caption track for it, and that track has not been checked for accuracy."
+  duration="8 minutes 5 seconds"
+  title="Math 251 - Linear Approximations"
+  watchHref="https://www.youtube.com/watch?v=X0qVfMokn84"
+/>
+
+Everything in the video is also on this page and in the reading, so you can
+**read instead of watching** if your connection is slow or your network blocks
+YouTube.
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="worked-example"
+  title="Worked example: estimating ln(1.1)"
+  tone="warn"
+>
+
+You know $\ln(1) = 0$. You do not know $\ln(1.1)$. The tangent line at $x = 1$
+gets you close without a calculator.
+
+**Set up.** $f(x) = \ln(x)$, and we linearize at $a = 1$ because that is the
+nearby point whose value we know.
+
+**Slope.** $f'(x) = 1/x$, so $f'(1) = 1$.
+
+**Build the line.** $L(x) = 0 + 1 \cdot (x - 1) = x - 1$.
+
+**Use it.** $\ln(1.1) \approx L(1.1) = 0.1$.
+
+**Check it.** A calculator gives $\ln(1.1) \approx 0.0953$. Our estimate is
+$0.1$, so we are high by about $0.0047$.
+
+**And now the half people skip: why are we high?** Because $\ln(x)$ is concave
+down, its graph bends away beneath its own tangent line, so the line sits above
+the curve and every estimate from it is an over-estimate. Concavity does not
+just explain the error, it tells you the _direction_ of the error before you
+check. Concave down over-estimates; concave up under-estimates.
+
+</EmbedCard>
+
+<EmbedCard anchor="see-it" title="See it: ln(x) and its tangent line at x = 1" tone="quiet">
+
+<GraphEmbed
+  openHref="https://www.desmos.com/calculator/bftunmngmt"
+  src="https://www.desmos.com/calculator/bftunmngmt?embed"
+  title="Desmos graph: the natural logarithm with its tangent line at x equals 1"
+>
+  The graph of the natural logarithm with its tangent line at x = 1. Drag the
+  point and watch the line stay close near the point of tangency and drift away
+  from it.
+</GraphEmbed>
+
+</EmbedCard>
+
+<EmbedCard anchor="try-it" title="Try it with other functions" tone="quiet">
+
+<GraphEmbed
+  openHref="https://www.desmos.com/calculator/3b8a97c288"
+  src="https://www.desmos.com/calculator/3b8a97c288?embed"
+  title="Desmos graph: a function you choose, with a movable point of tangency and its tangent line"
+>
+  Change the function and move the point of tangency. The tangent line is always
+  the best straight-line stand-in near the point, and never far from it.
+</GraphEmbed>
+
+</EmbedCard>
+
+<EmbedCard anchor="predict" title="Predict, then check" tone="quiet">
+
+Answer each one in your head first, then open it.
+
+<PredictReveal question="You linearize a function that is concave up and use the line to estimate a nearby value. Is the estimate too big or too small?">
+
+Too small. A concave-up graph bends away above its own tangent line, so the line
+sits below the curve and every estimate taken from it falls short. Concave down
+over-estimates; concave up under-estimates, and you can say which before you
+check anything.
+
+</PredictReveal>
+
+<PredictReveal question="Why linearize ln at a = 1 rather than at a = 1.1?">
+
+Because $a$ has to be a point whose value you already know. $\ln(1) = 0$ is the
+fact that makes the line computable, while $\ln(1.1)$ is the thing you are
+trying to find — centring there would assume the answer you are after.
+
+</PredictReveal>
+
+<PredictReveal question="The estimate of ln(1.1) was high by about 0.0047. What has happened to that error by x = 2?">
+
+It has grown, by a lot. $L(2) = 1$ while $\ln(2) \approx 0.693$, so the error is
+about $0.307$ — roughly sixty-five times the error at $1.1$. The tangent line is
+the best straight-line stand-in _near_ the point of tangency, and the word
+“near” is doing real work in that sentence.
+
+</PredictReveal>
+
+</EmbedCard>
+
+<EmbedCard anchor="write-first" title="Say how concavity decides the direction" tone="quiet">
+
+<WriteFirst
+  anchor="concavity-explanation"
+  prompt="Write one sentence saying how you decide, before checking, whether a tangent line estimate is too big or too small."
+  selfCheck="Does your sentence name the bend in the graph, or only the answer it produced?"
+>
+
+One possible explanation: **the tangent line lies above a concave-down graph and
+below a concave-up one, so concavity decides the direction of the error before
+any arithmetic.** Your wording can be different.
+
+Check that your sentence says which way the graph bends rather than which way
+one estimate went. “It was too big” records what happened and does not let you
+predict the next one. Watch one more limit as well: concavity gives the
+direction of the error, never its size — for that you need how far $x$ is from
+$a$.
+
+Now revise your sentence until it would work for a function you have not seen
+yet.
+
+</WriteFirst>
+
+</EmbedCard>
+
+<EmbedCard anchor="what-to-do" title="What to be able to do">
+
+Build $L(x)$ from $f(a)$ and $f'(a)$, use it to estimate, and say whether your
+estimate is too big or too small **from the concavity, before you check**.
+
+</EmbedCard>
+
+<EmbedNav current="section-1-8" />
