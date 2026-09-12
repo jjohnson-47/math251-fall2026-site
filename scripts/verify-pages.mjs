@@ -121,6 +121,50 @@ const routeChecks = [
       '<mjx-assistive-mml',
     ],
   },
+  // The Blackboard-native presentation: same MDX as /embed/, designed to sit
+  // inside a 720px frame in a Document. No masthead and no h1 by design, so the
+  // markers below are the light scope and the content itself.
+  {
+    route: '/bb/section-1-7/',
+    file: 'bb/section-1-7/index.html',
+    required: [
+      'bb-shell',
+      'Continuity, in three separate conditions',
+      'Differentiable is stronger than continuous',
+      'A corner is\ncontinuous and not differentiable.',
+      '/widget/corner-slopes/',
+      'Open the slopes-at-a-corner graph on its own',
+      '<mjx-container',
+      '<mjx-assistive-mml',
+    ],
+  },
+  {
+    route: '/bb/ivt-openstax/',
+    file: 'bb/ivt-openstax/index.html',
+    required: [
+      'bb-shell',
+      'One-sided limits, and the notation for them',
+      'Using it, and the three things it does not say',
+      'the theorem is silent',
+      '<mn>10</mn>',
+      '<mjx-container',
+      '<mjx-assistive-mml',
+    ],
+  },
+  {
+    route: '/bb/section-1-8/',
+    file: 'bb/section-1-8/index.html',
+    required: [
+      'bb-shell',
+      'Worked example: estimating ln(1.1)',
+      'Concave down over-estimates; concave up under-estimates.',
+      'https://www.desmos.com/calculator/bftunmngmt?embed',
+      'https://www.desmos.com/calculator/3b8a97c288?embed',
+      '<mn>0.0953</mn>',
+      '<mjx-container',
+      '<mjx-assistive-mml',
+    ],
+  },
   // The widget route. Its whole job is to be framed at a fixed pixel height
   // that does not scroll, so what a regression would take away is the controls
   // and the readouts, not the prose: there is no prose.
@@ -192,8 +236,8 @@ const videoReviews = JSON.parse(
   ),
 );
 
-for (const { route, file, html } of pages.filter(({ route: path }) =>
-  path.startsWith('/embed/'),
+for (const { route, file, html } of pages.filter(
+  ({ route: path }) => path.startsWith('/embed/') || path.startsWith('/bb/'),
 )) {
   const slug = file.split('/')[1];
 
@@ -241,6 +285,43 @@ for (const { route, file, html } of pages.filter(({ route: path }) =>
   // catches the one construction known to blow it.
   if (/clamp\(3\.4rem/.test(html)) {
     throw new Error(`${route} carries the public site's hero heading size.`);
+  }
+}
+
+for (const { route, html } of pages.filter(({ route: path }) =>
+  path.startsWith('/bb/'),
+)) {
+  // The whole point of this presentation is that a student cannot tell where
+  // Blackboard ends and the frame begins. A masthead, a footer or a repeated
+  // title is the tell, and the title is already on the Document.
+  //
+  // Tested against VISIBLE markup: <body>, with inline scripts removed. Both
+  // exclusions are load-bearing and each one failed first.
+  //
+  // The course label legitimately appears in <head> — the root layout sets an
+  // OpenGraph title and a title template, and a page is entitled to a name in
+  // the tab. Scoping to <body> is not enough on its own either, because the RSC
+  // flight payload is an inline script inside <body> and it serialises that
+  // same metadata, so the string is in the body twice while no chrome is
+  // rendered at all. docs/blackboard-embeds.md records the identical trap for
+  // the "no http(s) URL in a script body" rule. Match the thing where a student
+  // could actually see it.
+  const visible = html
+    .slice(html.indexOf('<body'))
+    .replace(/<script\b[\s\S]*?<\/script>/g, ' ');
+
+  for (const [marker, description] of [
+    ['embed-masthead', 'the embed masthead'],
+    ['Course notebook', 'the course-notebook link'],
+    ['MATH A251 · Calculus I', 'the course label'],
+    ['<h1', 'an h1; the Blackboard Document title already carries it'],
+    ['SiteHeader', 'the site header'],
+  ]) {
+    if (visible.includes(marker)) {
+      throw new Error(
+        `${route} carries ${description}; /bb/ is the page designed for a frame`,
+      );
+    }
   }
 }
 

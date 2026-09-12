@@ -48,15 +48,30 @@ TWO OUTPUTS PER SECTION. YOU PICK.
 ${'-'.repeat(78)}
   <slug>__BB.html      The reading, pasted in as native Blackboard content.
                        Full width, no nested scroll, nothing to load.
-  <slug>__IFRAME.html  The same page in a 720px frame instead: a blurb, a navy
-                       bar with a full-screen link, the frame, and a line about
-                       scrolling inside it.
+  <slug>__IFRAME.html  A navy bar carrying a full-screen link, then a 720px
+                       frame. Nothing else.
 
 Both are correct and neither replaces the other. The fragment is what the
 reversal of 2026-09-12 was about, and it is the one that does not depend on a
 deploy. The frame keeps the page and the Document in step automatically, which
-is worth something when a page is still being edited. Each file holds only its
+is worth something while a page is still being edited. Each file holds only its
 own block, so either one is open, select all, copy.
+
+WHAT THE FRAME NOW POINTS AT
+${'-'.repeat(78)}
+The frame used to point at the full-screen page, and inside a Document that
+read as a foreign object: a dark, site-chrome'd page floating in Blackboard's
+white shell, under a blurb that repeated the page's own opening, over a caption
+explaining how an iframe works, with the title showing three times.
+
+The page inside the frame is now a presentation built for the frame:
+
+  ${ASSET_BASE}/bb/<slug>/      what the frame shows
+  ${ASSET_BASE}/embed/<slug>/   what the bar links to
+
+Same words, same MDX file, three presentations. The /bb/ page is light, full
+frame width, and carries no masthead, no footer and no h1, because the Document
+title already says the title. The blurb and the caption paragraphs are gone.
 
 PASTE ORDER
 ${'-'.repeat(78)}
@@ -149,7 +164,7 @@ ${'-'.repeat(78)}
   section-1-8   Desmos, ln(x) and its tangent line        420px
   section-1-8   Desmos, choose your own function          420px
   section-1-7   Slopes at a corner (course widget)        ${String(WIDGET_FRAME_PX).padStart(3)}px
-  __IFRAME.html Whole page in a panel                     720px
+  __IFRAME.html /bb/<slug>/ in a panel                    720px
 
 The thumbnail card is 482 x 382 px at a 1100px column and 278 x 318 px at a
 390px one: the image carries width and height attributes so Blackboard reserves

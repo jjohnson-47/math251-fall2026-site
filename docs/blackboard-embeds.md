@@ -98,6 +98,54 @@ framed.**
 This does not retire the panel. It scopes it: panel-plus-link is for a
 supplement, not for the assignment.
 
+### AMENDED 2026-09-12: the frame stays, and the page inside it is designed for it
+
+The reversal above is right about the reading and wrong about one thing: it
+treats "framed" and "site-styled page" as the same choice. They are not. What
+was actually wrong with the framed Document was the page inside the frame, not
+the frame.
+
+Pasting the old block rendered a dark, site-chrome'd page floating inside
+Blackboard's white shell, under a blurb repeating the page's own opening, over a
+caption explaining how an iframe works, with the title showing three times:
+Document title, masthead, page h1. It read as a foreign object dropped into the
+CMS.
+
+So `app/embed/` was split in two, and the same `content/week4/<slug>.mdx` now has
+three presentations rather than three copies:
+
+| Route                    | What it is                                                                                               | Who points at it             |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- | ---------------------------- |
+| `app/embed/<slug>/`      | Site-styled full screen. Masthead, h1.                                                                   | the bar's link, nothing else |
+| `app/bb/<slug>/`         | Built for a 720px frame. Light, no masthead, no h1, full frame width, the pasted fragment's own palette. | the frame                    |
+| the `__BB.html` fragment | Native Document content, inline styles only.                                                             | nothing; it IS the Document  |
+
+Two mechanics make one source render three ways, and both are worth knowing
+before touching this:
+
+- **A component the MDX does not import resolves from `props.components`.** That
+  is why `CornerSlopeLab` is not imported in `section-1-7.mdx`: the embed route
+  passes the inline React explorer, the `/bb/` route passes a nested frame at the
+  widget's measured height, and the fragment exporter passes a panel block. MDX
+  throws `Expected component ... to be defined` when a name is missing, so a
+  forgotten one fails loudly rather than rendering blank.
+- **`components={{ h1: () => null }}` removes the h1 from the markup**, rather
+  than hiding it with CSS. `display:none` would leave an h1 in the document for
+  anything that reads structure; this leaves the first heading on the page as a
+  card's h2, which is what the Document wants.
+
+The light theme is pinned by redefining the custom properties on `.bb-shell`
+rather than by fighting `prefers-color-scheme`: properties inherit from the
+nearest defining ancestor, so nothing inside that scope can go dark whatever the
+viewer's OS says. `body` needs its own rule because it is an ancestor of the
+scope and paints its background from `:root`.
+
+The paste block lost its prose. It is the navy bar carrying the full-screen link
+and the 720px frame, and nothing else — 724 bytes for 1.7. The blurb duplicated
+the page's opening paragraph and the caption was documentation about iframes;
+neither belongs in front of a student. The bar stays: it is the escape hatch on
+a phone, and it reads as a control rather than a note.
+
 ## The embed contract — the Blackboard side
 
 Four constraints on the generated paste block. They govern the Document, not the

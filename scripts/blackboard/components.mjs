@@ -12,6 +12,7 @@
  */
 import { createElement as h, Fragment } from 'react';
 
+import { WIDGET_FRAME_PX } from '../../lib/widget-frame.ts';
 import { escapeAttribute, mathFont, mathParts } from './math.mjs';
 
 // Where a published route lives. `../build/math_assets.py` holds the authority
@@ -43,23 +44,12 @@ export const REVEAL = 'details';
  */
 export const WIDGET_DEPLOYED = true; // verified live 2026-09-12: widget renders "Slopes at a corner", gap 0.5/0.1/0.01, slopes -1 and 1
 
-// Measured 2026-09-12, Chromium 148.0.7778.96, over HTTP at the production
-// subpath. The number is the tallest state reachable by sweeping all 13 slider
-// positions against all 3 gap settings, at thirteen widths from 280px to
-// 1026px -- not the state the page happens to load in, and not one width.
-//
-// The width sweep is the part that matters. A fixed-height frame sits in a
-// Blackboard column of any width, and the first version of this widget was
-// 503px tall at 1026px and 667px tall at 500px: a frame sized on the wide
-// measurement would have scrolled through the whole middle of the range, which
-// is a failed widget. It is now 573px to 621px across that entire span.
-//
-//   280 / 300 / 316 px .. 573      430 px .. 617      620 / 700 px .. 621
-//   350 px ............. 595      480 / 520 / 559 px .. 621
-//   390 px ............. 604      900 / 1026 px ....... 621
-//
-// Frame is the tallest measurement plus 40, per the Blackboard contract.
-export const WIDGET_FRAME_PX = 661;
+// The fitted frame height, measured rather than chosen. It lives in
+// lib/widget-frame.ts because the React frame on app/bb/section-1-7/ needs
+// the same number and cannot import a .mjs script; the provenance and the
+// full width sweep are recorded there. Re-exported so the paste test and the
+// notes keep importing it from here.
+export { WIDGET_FRAME_PX };
 
 const CARD = {
   note: 'background-color:#e6f3ff;padding:20px;border-radius:8px;margin-bottom:25px;',

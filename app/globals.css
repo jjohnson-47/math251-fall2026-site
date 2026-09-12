@@ -1554,3 +1554,213 @@
 .embed-lab--compact .embed-lab-reset {
   margin: 0.45rem 0 0;
 }
+
+/* Blackboard-native routes ------------------------------------------------
+ *
+ * `app/bb/<slug>/` is the same MDX as `app/embed/<slug>/`, presented for life
+ * inside a 720px frame in a Blackboard Ultra Document. The goal is that a
+ * student cannot tell where Blackboard ends and the frame begins.
+ *
+ * The colours below are the ones in `scripts/blackboard/components.mjs`, which
+ * is what the pasted fragments use and what renders correctly in a live shell.
+ * They are duplicated here on purpose: a fragment cannot carry a stylesheet and
+ * a stylesheet cannot carry inline styles, so the same palette has to exist in
+ * both mechanisms. Change one, change the other.
+ *
+ * Light only, and not as a preference — it sits on a white Blackboard page.
+ * Redefining the tokens on `.bb-shell` rather than fighting
+ * `prefers-color-scheme` works because custom properties inherit from the
+ * nearest defining ancestor, so nothing inside this scope can go dark. The
+ * body rule is separate because `body` is an ancestor of this scope and paints
+ * its own background from `:root`. */
+
+body:has(.bb-shell) {
+  background: #ffffff;
+}
+
+.bb-shell {
+  --background: #ffffff;
+  --foreground: #202124;
+  --card: #ffffff;
+  --card-foreground: #202124;
+  --popover: #ffffff;
+  --popover-foreground: #202124;
+  --primary: #005a9c;
+  --primary-foreground: #ffffff;
+  --secondary: #e6f3ff;
+  --secondary-foreground: #1f3864;
+  --muted: #f8f9fa;
+  --muted-foreground: #555555;
+  --accent: #ffb066;
+  --accent-strong: #a14b00;
+  --accent-foreground: #4a2600;
+  --border: #cfd8e3;
+  --input: #cfd8e3;
+  --ring: #005a9c;
+  min-width: 0;
+  /* Full frame width with modest padding. A centred max-width would leave fat
+   * margins inside a panel that is already narrow. */
+  padding: 14px 18px 28px;
+  background: #ffffff;
+  color: #202124;
+  color-scheme: light;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.bb-shell .embed-main {
+  max-width: none;
+  margin: 0;
+}
+
+.bb-shell .embed-prose {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* The h1 is dropped at render, so the lead paragraph is the first child and
+ * starts flush with the padding. Content inside 100px of the top is the
+ * requirement; this puts it at the padding. */
+.bb-shell .embed-prose > p:first-child {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+.bb-shell .embed-source {
+  font-size: 0.95rem;
+}
+
+.bb-shell a,
+.bb-shell .embed-link {
+  color: #005a9c;
+}
+
+/* Cards, in the fragment's four tones. */
+.bb-shell .embed-card {
+  margin: 0 0 25px;
+  border: 0;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 20px;
+}
+
+.bb-shell .embed-card--note {
+  background: #e6f3ff;
+}
+
+.bb-shell .embed-card--quiet {
+  background: #f8f9fa;
+}
+
+.bb-shell .embed-card--warn {
+  border-left: 4px solid #ff6600;
+  background: #fff4e6;
+}
+
+.bb-shell .embed-card--plain {
+  border: 1px solid #e0e0e0;
+  background: #ffffff;
+}
+
+.bb-shell .embed-card-title {
+  margin: 0 0 0.35rem;
+  color: #005a9c;
+  font-size: 1.12rem;
+}
+
+/* Predict-reveals. */
+.bb-shell .embed-check {
+  margin: 12px 0;
+  border: 1px solid #cfd8e3;
+  border-radius: 6px;
+  background: #ffffff;
+}
+
+.bb-shell .embed-check-summary {
+  padding: 10px 14px;
+  color: #1f3864;
+  font-weight: 700;
+}
+
+.bb-shell .embed-check-body {
+  border-top: 1px solid #e6ebf2;
+  padding: 2px 14px 8px;
+}
+
+/* Nested frames: the Desmos graphs and the corner-slopes widget. */
+.bb-shell .embed-frame {
+  margin: 0 0 18px;
+  border: 1px solid #cfd8e3;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.bb-shell .embed-frame-bar {
+  background: #1f3864;
+  padding: 9px 13px;
+}
+
+.bb-shell .embed-frame-bar-link,
+.bb-shell .embed-frame-bar-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.bb-shell .embed-frame-caption {
+  border-top: 1px solid #e6ebf2;
+  padding: 8px 12px;
+  color: #555555;
+  font-size: 0.95rem;
+}
+
+.bb-widget {
+  margin: 0 0 18px;
+}
+
+.bb-widget-blurb {
+  margin: 0 0 10px;
+}
+
+/* The write-first block and the forward link. */
+.bb-shell .embed-writing-input {
+  border: 1px solid #cfd8e3;
+  background: #ffffff;
+  color: #202124;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.bb-shell .embed-writing-note,
+.bb-shell .embed-nav > p {
+  color: #555555;
+}
+
+.bb-shell .embed-nav {
+  border-top: 2px solid #cfd8e3;
+}
+
+.bb-shell .embed-nav-current {
+  color: #555555;
+}
+
+.bb-shell .embed-nav-tag {
+  background: #ffe9cc;
+  color: #4a2600;
+}
+
+/* The video card. */
+.bb-shell .embed-resource-card {
+  border: 1px solid #cfd8e3;
+  background: #ffffff;
+  color: #202124;
+}
+
+.bb-shell .embed-resource-title {
+  color: #1f3864;
+}
+
+.bb-shell .embed-resource-note {
+  color: #555555;
+}
+
+.bb-shell .embed-resource-badge {
+  background: #1f3864;
+}

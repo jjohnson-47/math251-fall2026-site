@@ -106,3 +106,53 @@ export function panel(slug, assetBase) {
     `<p style="${PROSE}color:#5f6368;font-size:0.9rem;">${CAPTION_PAGE}</p>\n`
   );
 }
+
+/** The same frame, pointed at a src the caller supplies. */
+function frameAt(src, title) {
+  if (!title || title.endsWith('.')) {
+    throw new Error(
+      `give the iframe a real title, got ${JSON.stringify(title)}`,
+    );
+  }
+  const height = `${PANEL_PX}px`;
+  if (!/^\d+px$/.test(height)) {
+    throw new Error('a frame height is a whole number of pixels');
+  }
+  return (
+    `<iframe src="${src}"\n` +
+    `          title="${title}"\n` +
+    `          style="width:100%;height:${height};border:0;display:block;"\n` +
+    `          loading="lazy"></iframe>`
+  );
+}
+
+/**
+ * math_assets.panel_bare(): the bar and the frame, and nothing else.
+ *
+ * REVISED 2026-09-12. `panel()` wraps the frame in a blurb above and a caption
+ * below, and inside a Document both read as noise: the blurb repeated the
+ * page's own opening paragraph, and the caption was documentation about how an
+ * iframe behaves. What is left is the escape hatch, which reads as a control
+ * rather than a note, and the frame.
+ *
+ * The two URLs are deliberately different. The frame points at `/bb/<slug>/`,
+ * the presentation built for a frame: light, no masthead, no h1, full width.
+ * The bar points at `/embed/<slug>/`, the site-styled full-screen page, which
+ * is what a student wants when they leave the panel.
+ */
+export function panelBare(slug, assetBase) {
+  if (!TITLE[slug]) {
+    throw new Error(`${slug}: no Document title recorded`);
+  }
+  const framed = frameAt(`${assetBase}/bb/${slug}/`, TITLE[slug]);
+  return (
+    `<div style="border:1px solid #c7d0dd;border-radius:8px;overflow:hidden;margin:18px 0;">\n` +
+    `  <div style="background:#1f3864;padding:0.5rem 0.9rem;${PROSE}` +
+    `font-size:0.92rem;color:#ffffff;">\n` +
+    `    <a href="${assetBase}/embed/${slug}/" target="_blank" rel="noopener noreferrer" ` +
+    `style="color:#ffffff;font-weight:700;text-decoration:underline;">${LINK_LABEL[slug]}</a>\n` +
+    `  </div>\n` +
+    `  ${framed}\n` +
+    `</div>\n`
+  );
+}

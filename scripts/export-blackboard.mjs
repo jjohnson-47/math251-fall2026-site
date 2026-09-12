@@ -45,7 +45,7 @@ import {
   blackboardComponents,
 } from './blackboard/components.mjs';
 import { RENDER, assertAltSane } from './blackboard/math.mjs';
-import { PANEL_PX, panel } from './blackboard/panel.mjs';
+import { PANEL_PX, panelBare } from './blackboard/panel.mjs';
 
 const projectRoot = new URL('../', import.meta.url);
 const outputDirectory = new URL(
@@ -386,9 +386,29 @@ function validatePanel(name, html) {
     fail('a panel block carries the block alone, not the fragment card shell');
   }
 
+  // The frame points at the Blackboard-native presentation, not at the
+  // site-styled full-screen page. Pointing it at /embed/ is what put a dark,
+  // masthead'd page inside Blackboard's white shell.
+  if (!/<iframe src="[^"]*\/bb\//.test(html)) {
+    fail('the frame must point at /bb/<slug>/, the page designed for a frame');
+  }
+  if (!/<a href="[^"]*\/embed\//.test(html)) {
+    fail('the bar must link to /embed/<slug>/, the full-screen page');
+  }
+
+  // No prose. The blurb above the frame duplicated the page's own opening and
+  // the caption below it explained how an iframe works; both were deleted
+  // 2026-09-12. What is left is a control and a frame.
+  if (/<p\b/.test(html)) {
+    fail(
+      'a paragraph. The blurb and the caption are gone: the block is the bar ' +
+        'and the frame, and the page inside says everything else',
+    );
+  }
+
   const bytes = Buffer.byteLength(html);
-  if (bytes >= 2048) {
-    fail(`${bytes} bytes; a panel block is a paste block, not a page`);
+  if (bytes >= 1024) {
+    fail(`${bytes} bytes; a bare panel block is a bar and a frame`);
   }
 }
 
@@ -406,12 +426,13 @@ async function main() {
   const written = [];
   for (const section of SECTIONS) {
     // Two outputs per section, both correct, neither preferred. The fragment
-    // pastes the reading in as native page content; the panel block frames the
-    // route instead. Jeffrey picks per Document at paste time.
+    // pastes the reading in as native page content; the panel block frames
+    // app/bb/<slug>/ instead, the presentation built for a frame. Jeffrey picks
+    // per Document at paste time.
     const fragment = await renderSection(section);
     validateFragment(section.file, fragment);
 
-    const block = panel(section.slug, ASSET_BASE);
+    const block = panelBare(section.slug, ASSET_BASE);
     validatePanel(section.panelFile, block);
 
     if (!check) {
@@ -442,7 +463,7 @@ async function main() {
     console.log(
       `  ${verb} ${section.panelFile.padEnd(26)} ${String(
         section.panelBytes,
-      ).padStart(7)} bytes  the same page as a ${PANEL_PX}px panel block`,
+      ).padStart(7)} bytes  /bb/ in a ${PANEL_PX}px frame, bar plus frame only`,
     );
   }
   console.log(
