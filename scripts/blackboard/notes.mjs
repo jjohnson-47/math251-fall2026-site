@@ -123,7 +123,7 @@ The reading does not depend on it. The line and the link above the frame say
 what the graph is for, so a student who never loads it still has the sentence.
 
 `
-}DO THIS BEFORE PASTING EITHER 1.7 OR 1.8: PUSH THE THUMBNAILS
+}THE THUMBNAILS ARE LIVE
 ${'-'.repeat(78)}
 Each video block now carries a thumbnail card. The image is SELF-HOSTED, not
 hotlinked from i.ytimg.com, so that a Document does not make every page view a
@@ -136,11 +136,10 @@ and the fragments reference them at
 
   ${ASSET_BASE}/media/video/<id>.jpg
 
-Checked 2026-09-12: both of those URLs return 404. They are in the working copy
-and in dist/client, but nothing has been committed or pushed, so until the Pages
-workflow runs for a commit containing them a pasted fragment shows a broken
-image where the thumbnail should be. The rest of the block still reads: the
-title, the duration, the caption caveat and the link are all text.
+Verified 2026-09-12, after the Pages deploy: both URLs return 200 image/jpeg,
+18,801 and 23,220 bytes. Nothing is pending. If a thumbnail ever renders as a
+broken image in a Document, check that URL first - the rest of the block is
+plain text and reads perfectly well without it.
 
 WHAT IS IN EACH FILE
 ${'-'.repeat(78)}
