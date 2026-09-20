@@ -248,7 +248,7 @@ export function blackboardComponents({ slug, routeUrl }) {
     // One card, one link. The thumbnail is served from this site, never from
     // i.ytimg.com: a Document that hotlinks Google makes every page view a
     // request to Google, which is the thing the youtube-nocookie rule exists
-    // to stop and the reason these two videos are not embedded at all.
+    // to stop and one reason these videos are links rather than embedded.
     VideoResource: ({
       title,
       duration,

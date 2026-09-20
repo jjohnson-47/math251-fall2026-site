@@ -1,5 +1,5 @@
 /**
- * Emit one pasteable HTML fragment per Week 4 section.
+ * Emit one pasteable HTML fragment per authored weekly section.
  *
  * WHY THIS EXISTS
  * ---------------
@@ -17,15 +17,15 @@
  *
  * WHAT IT WRITES
  * --------------
- *   ../blackboard_content/math_a251_week4/<slug>__BB.html
+ *   ../blackboard_content/math_a251_weekN/<slug>__BB.html
  *
  * alongside the hand-built pages that shape it. Those are in live shells and
  * render; every style constant here is copied from them.
  *
  *   npm run export:bb            write the fragments
- *   npm run export:bb -- --check render and validate, write nothing
+ *   node scripts/export-blackboard.mjs --check   render and validate, write nothing
  */
-import { readFile, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { access } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 
@@ -48,10 +48,6 @@ import { RENDER, assertAltSane } from './blackboard/math.mjs';
 import { PANEL_PX, panelBare } from './blackboard/panel.mjs';
 
 const projectRoot = new URL('../', import.meta.url);
-const outputDirectory = new URL(
-  '../blackboard_content/math_a251_week4/',
-  projectRoot,
-);
 
 // Reading order. The overview students already have sends them to the IVT
 // supplement straight after 1.7, so the Documents go in in this order.
@@ -62,6 +58,7 @@ const SECTIONS = [
     file: 'section-1-7__BB.html',
     panelFile: 'section-1-7__IFRAME.html',
     title: 'Limits, Continuity, and Differentiability (Section 1.7)',
+    outputDirectory: '../blackboard_content/math_a251_week4/',
   },
   {
     slug: 'ivt-openstax',
@@ -70,6 +67,7 @@ const SECTIONS = [
     panelFile: 'ivt-openstax__IFRAME.html',
     title:
       'Continuity and the Intermediate Value Theorem (OpenStax supplement)',
+    outputDirectory: '../blackboard_content/math_a251_week4/',
   },
   {
     slug: 'section-1-8',
@@ -77,6 +75,21 @@ const SECTIONS = [
     file: 'section-1-8__BB.html',
     panelFile: 'section-1-8__IFRAME.html',
     title: 'The Tangent Line Approximation (Section 1.8)',
+    outputDirectory: '../blackboard_content/math_a251_week4/',
+  },
+  {
+    slug: 'section-2-1',
+    source: 'content/week5/section-2-1.mdx',
+    file: 'section-2-1__BB.html',
+    title: 'Elementary Derivative Rules (Section 2.1)',
+    outputDirectory: '../blackboard_content/math_a251_week5/',
+  },
+  {
+    slug: 'section-2-2',
+    source: 'content/week5/section-2-2.mdx',
+    file: 'section-2-2__BB.html',
+    title: 'The Sine and Cosine Functions (Section 2.2)',
+    outputDirectory: '../blackboard_content/math_a251_week5/',
   },
 ];
 
@@ -348,7 +361,7 @@ function validateCommon(name, html) {
   }
 }
 
-/** The native fragment: the whole reading, inside the Week 4 card shell. */
+/** The native fragment: the whole reading, inside the course card shell. */
 function validateFragment(name, html) {
   validateCommon(name, html);
   if (!html.startsWith('<div style="background:linear-gradient')) {
@@ -421,32 +434,40 @@ async function main() {
   await access(new URL('app/widget/corner-slopes/page.tsx', projectRoot));
   for (const section of SECTIONS) {
     await access(new URL(`app/embed/${section.slug}/page.tsx`, projectRoot));
+    if (section.panelFile) {
+      await access(new URL(`app/bb/${section.slug}/page.tsx`, projectRoot));
+    }
   }
 
   const written = [];
   for (const section of SECTIONS) {
-    // Two outputs per section, both correct, neither preferred. The fragment
-    // pastes the reading in as native page content; the panel block frames
-    // app/bb/<slug>/ instead, the presentation built for a frame. Jeffrey picks
-    // per Document at paste time.
+    // Every section gets a native fragment. A configured panelFile adds the
+    // framed alternative for sections where that path is still retained.
     const fragment = await renderSection(section);
     validateFragment(section.file, fragment);
 
-    const block = panelBare(section.slug, ASSET_BASE);
-    validatePanel(section.panelFile, block);
+    let block = null;
+    if (section.panelFile) {
+      block = panelBare(section.slug, ASSET_BASE);
+      validatePanel(section.panelFile, block);
+    }
 
     if (!check) {
+      const outputDirectory = new URL(section.outputDirectory, projectRoot);
+      await mkdir(outputDirectory, { recursive: true });
       await writeFile(new URL(section.file, outputDirectory), fragment, 'utf8');
-      await writeFile(
-        new URL(section.panelFile, outputDirectory),
-        block,
-        'utf8',
-      );
+      if (section.panelFile) {
+        await writeFile(
+          new URL(section.panelFile, outputDirectory),
+          block,
+          'utf8',
+        );
+      }
     }
     written.push({
       ...section,
       bytes: Buffer.byteLength(fragment),
-      panelBytes: Buffer.byteLength(block),
+      panelBytes: block ? Buffer.byteLength(block) : null,
     });
   }
 
@@ -460,16 +481,20 @@ async function main() {
       `  ${verb} ${section.file.padEnd(26)} ${String(section.bytes).padStart(7)}` +
         ` bytes  ${section.title}`,
     );
-    console.log(
-      `  ${verb} ${section.panelFile.padEnd(26)} ${String(
-        section.panelBytes,
-      ).padStart(7)} bytes  /bb/ in a ${PANEL_PX}px frame, bar plus frame only`,
-    );
+    if (section.panelFile) {
+      console.log(
+        `  ${verb} ${section.panelFile.padEnd(26)} ${String(
+          section.panelBytes,
+        ).padStart(
+          7,
+        )} bytes  /bb/ in a ${PANEL_PX}px frame, bar plus frame only`,
+      );
+    }
   }
   console.log(
-    '\n  Two outputs per section. The __BB fragment pastes the reading in as\n' +
-      '  native page content; the __IFRAME block frames the route instead. Both\n' +
-      '  are correct and each file is open-select-all-copy; pick per Document.',
+    '\n  Every section gets a __BB native reading fragment. Sections with a\n' +
+      '  configured panelFile also get a __IFRAME alternative; Week 5 uses the\n' +
+      '  native fragments only. Each file is open-select-all-copy.',
   );
   if (!WIDGET_DEPLOYED) {
     console.log(
@@ -480,8 +505,8 @@ async function main() {
     );
   }
   console.log(
-    `\n  Output: ${fileURLToPath(outputDirectory)}\n` +
-      '  Paste order: 1.7, then the IVT supplement, then 1.8.',
+    `\n  Output: ${fileURLToPath(new URL('../blackboard_content/', projectRoot))}\n` +
+      '  Paste order: Week 4 stays 1.7, IVT, 1.8. Week 5 is 2.1, then 2.2.',
   );
 }
 

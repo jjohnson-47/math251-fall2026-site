@@ -121,6 +121,34 @@ const routeChecks = [
       '<mjx-assistive-mml',
     ],
   },
+  {
+    route: '/embed/section-2-1/',
+    file: 'embed/section-2-1/index.html',
+    required: [
+      'Elementary Derivative Rules (Section 2.1)',
+      'Rewrite roots and reciprocals as powers',
+      'Worked example: use the rules to build a tangent line',
+      'Section 1.8 supplied the tangent-line formula.',
+      'https://www.youtube.com/watch?v=feQxG1PE0ps',
+      '/media/video/feQxG1PE0ps.jpg',
+      '<mjx-container',
+      '<mjx-assistive-mml',
+    ],
+  },
+  {
+    route: '/embed/section-2-2/',
+    file: 'embed/section-2-2/index.html',
+    required: [
+      'The Sine and Cosine Functions (Section 2.2)',
+      'Why the two rules fit the unit circle',
+      "The rider's vertical velocity is",
+      'The derivatives repeat in a four-step cycle',
+      'https://www.youtube.com/watch?v=PrIoZVf3dMo',
+      '/media/video/PrIoZVf3dMo.jpg',
+      '<mjx-container',
+      '<mjx-assistive-mml',
+    ],
+  },
   // The Blackboard-native presentation: same MDX as /embed/, designed to sit
   // inside a 720px frame in a Document. No masthead and no h1 by design, so the
   // markers below are the light scope and the content itself.
@@ -183,7 +211,18 @@ const routeChecks = [
   },
 ];
 
-await Promise.all([access(mainMathFont), access(socialImage)]);
+const videoPosters = [
+  'media/video/cSXE_QpiWrY.jpg',
+  'media/video/X0qVfMokn84.jpg',
+  'media/video/feQxG1PE0ps.jpg',
+  'media/video/PrIoZVf3dMo.jpg',
+];
+
+await Promise.all([
+  access(mainMathFont),
+  access(socialImage),
+  ...videoPosters.map((file) => access(new URL(file, outputDirectory))),
+]);
 
 const pages = await Promise.all(
   routeChecks.map(async (check) => {
@@ -243,7 +282,7 @@ for (const { route, file, html } of pages.filter(
 
   // A video may not be embedded until someone has confirmed an English caption
   // track that is not labelled auto-generated, recorded per id in
-  // docs/video-reviews.json. Neither Week 4 video has one, so both are links.
+  // docs/video-reviews.json. Anything that does not clear that gate is a link.
   for (const [, videoId] of html.matchAll(
     /youtube-nocookie\.com\/embed\/([\w-]+)/g,
   )) {

@@ -1,5 +1,5 @@
 import { EmbedLink } from '@/components/embed-link';
-import { week4EmbedRoutes } from '@/lib/embed-routes';
+import { embedRoutesByWeek } from '@/lib/embed-routes';
 import { siteHref } from '@/lib/site';
 
 type EmbedNavProps = {
@@ -8,9 +8,13 @@ type EmbedNavProps = {
 };
 
 export function EmbedNav({ current }: EmbedNavProps) {
-  const position = week4EmbedRoutes.findIndex(
-    (route) => route.slug === current,
-  );
+  const routes =
+    embedRoutesByWeek.find((candidate) =>
+      candidate.some((route) => route.slug === current),
+    ) ?? embedRoutesByWeek[0];
+  const position = routes.findIndex((route) => route.slug === current);
+  const pageCount = routes.length;
+  const pageWord = pageCount === 1 ? 'page' : 'pages';
 
   return (
     <nav aria-labelledby="embed-nav-title" className="embed-nav">
@@ -18,12 +22,11 @@ export function EmbedNav({ current }: EmbedNavProps) {
         Where to go next
       </h2>
       <p>
-        These three pages carry one idea between them, and they are written to
-        be read in this order. This is page {position + 1} of{' '}
-        {week4EmbedRoutes.length}.
+        These {pageCount} {pageWord} are written to be read in this order. This
+        is page {position + 1} of {pageCount}.
       </p>
       <ol className="embed-nav-list">
-        {week4EmbedRoutes.map((route) => (
+        {routes.map((route) => (
           <li
             aria-current={route.slug === current ? 'page' : undefined}
             key={route.slug}

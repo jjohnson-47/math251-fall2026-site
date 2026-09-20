@@ -1,0 +1,249 @@
+import { EmbedCard } from '@/components/embed-card';
+import { PredictReveal } from '@/components/embed-check';
+import { EmbedNav } from '@/components/embed-nav';
+import { ReadingLine } from '@/components/embed-reading';
+import { VideoResource } from '@/components/embed-video';
+import { WriteFirst } from '@/components/embed-write-first';
+import { activeCalculusSectionTwoTwo } from '@/lib/embed-routes';
+
+# The Sine and Cosine Functions (Section 2.2)
+
+Section 2.2 adds the first non-polynomial rules most students recognize from
+graphs: the derivatives of sine and cosine. These rules matter because sine and
+cosine model repeating motion, and a derivative tells you how that motion is
+changing right now.
+
+<ReadingLine
+  href={activeCalculusSectionTwoTwo}
+  label="Active Calculus Section 2.2: The sine and cosine functions"
+/>
+
+<EmbedCard anchor="two-rules" title="The two rules" tone="note">
+
+The derivatives are:
+
+$$
+\frac{d}{dx}\left[\sin(x)\right] = \cos(x)
+$$
+
+$$
+\frac{d}{dx}\left[\cos(x)\right] = -\sin(x)
+$$
+
+That minus sign in the second rule is not decoration. It records the way the
+cosine graph is moving at the same places where sine is positive or negative.
+
+</EmbedCard>
+
+<EmbedCard anchor="radians" title="Radians are required" tone="warn">
+
+These derivative rules are true when angles are measured in radians. Calculus
+uses radians because they connect angle, arc length, and rate of change without
+an extra conversion factor.
+
+If your calculator is in degrees, numerical checks for these rules will look
+wrong. The graphing and derivative work in this course assumes radians unless a
+problem says otherwise.
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="unit-circle"
+  title="Why the two rules fit the unit circle"
+  tone="note"
+>
+
+Imagine a point moving counterclockwise around the unit circle at one radian
+per unit of time. Its position is
+
+$$
+P(t) = \left(\cos(t),\sin(t)\right)
+$$
+
+The velocity points tangent to the circle. Rotating the position vector 90
+degrees counterclockwise gives
+
+$$
+P'(t) = \left(-\sin(t),\cos(t)\right)
+$$
+
+Read the components separately. The horizontal position $\cos(t)$ changes at
+rate $-\sin(t)$, and the vertical position $\sin(t)$ changes at rate
+$\cos(t)$. The two derivative rules are the coordinate description of circular
+motion.
+
+</EmbedCard>
+
+<EmbedCard anchor="video" title="Video" tone="quiet">
+
+I recorded this lesson for this class. It connects the derivatives of sine and
+cosine to the unit circle and works examples with both rules. Use it after the
+unit-circle explanation above or as a second pass after the reading.
+
+<VideoResource
+  captionStatus="YouTube offers only an automatic English caption track for it, and that track has not been checked for accuracy."
+  duration="9 minutes 9 seconds"
+  posterAlt="Title card reading Math 251 - Calculus 1, Section 2.2 - Sine and Cosine Functions. A recorded lesson connecting unit-circle motion to the derivatives of sine and cosine."
+  title="Math 251 - Derivatives of Sine and Cosine"
+  videoId="PrIoZVf3dMo"
+  watchHref="https://www.youtube.com/watch?v=PrIoZVf3dMo"
+/>
+
+Everything essential from the video is also on this page and in the reading.
+You can **read instead of watching** if your connection is slow or your network
+blocks YouTube.
+
+</EmbedCard>
+
+<EmbedCard anchor="motion" title="What the signs mean" tone="quiet">
+
+Think of $s(t) = \sin(t)$ as a position that moves up and down.
+
+At $t = 0$, the position is $0$, but the graph is rising quickly. The derivative
+is
+
+$$
+s'(0) = \cos(0) = 1
+$$
+
+At $t = \pi/2$, the position is at the top. The graph has flattened out before
+turning back down. The derivative is
+
+$$
+s'(\pi/2) = \cos(\pi/2) = 0
+$$
+
+The derivative is not telling you where the object is. It is telling you which
+way the position is moving and how fast.
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="context"
+  title="Worked example: interpret a periodic rate"
+  tone="warn"
+>
+
+Suppose a rider's height is modelled by
+
+$$
+h(t) = 12 + 10\sin(t)
+$$
+
+where height is in metres and time is in minutes. Then
+
+$$
+h'(t) = 10\cos(t)
+$$
+
+At $t = \pi/3$,
+
+$$
+h'(\pi/3) = 10\cos(\pi/3) = 5
+$$
+
+The rider's vertical velocity is $5$ metres per minute upward at that instant.
+The derivative is a rate with units and direction, not another height.
+
+</EmbedCard>
+
+<EmbedCard anchor="cycle" title="The derivatives repeat in a four-step cycle" tone="quiet">
+
+Starting with sine and differentiating repeatedly gives
+
+$$
+\sin(x)
+\longrightarrow \cos(x)
+\longrightarrow -\sin(x)
+\longrightarrow -\cos(x)
+\longrightarrow \sin(x)
+$$
+
+The cycle is a useful check. Four derivatives return to the function you
+started with. It also keeps the negative sign attached to the derivative of
+cosine.
+
+</EmbedCard>
+
+<EmbedCard anchor="worked-example" title="Worked example: combine with Section 2.1" tone="plain">
+
+Let
+
+$$
+f(x) = 3\sin(x) - 2\cos(x) + x^4
+$$
+
+Differentiate term by term.
+
+**First term.** $3\sin(x)$ becomes $3\cos(x)$.
+
+**Second term.** $-2\cos(x)$ becomes $-2(-\sin(x))$, which is $2\sin(x)$.
+
+**Third term.** $x^4$ becomes $4x^3$.
+
+So
+
+$$
+f'(x) = 3\cos(x) + 2\sin(x) + 4x^3
+$$
+
+The most common error is losing the negative sign in the derivative of cosine.
+
+</EmbedCard>
+
+<EmbedCard anchor="predict" title="Predict, then check" tone="quiet">
+
+Answer each one in your head first, then open it.
+
+<PredictReveal question="What is the derivative of 5sin(x)?">
+
+$5\cos(x)$. The coefficient stays out front, and the derivative of $\sin(x)$
+is $\cos(x)$.
+
+</PredictReveal>
+
+<PredictReveal question="What is the derivative of 7cos(x)?">
+
+$-7\sin(x)$. The coefficient stays out front, and the derivative of $\cos(x)$
+is $-\sin(x)$.
+
+</PredictReveal>
+
+<PredictReveal question="If p(t) = cos(t), what is p'(0), and what does it say?">
+
+$p'(0) = -\sin(0) = 0$. At $t = 0$, the cosine graph is at the top of its cycle,
+so its instantaneous rate of change is zero right there.
+
+</PredictReveal>
+
+</EmbedCard>
+
+<EmbedCard anchor="write-first" title="Explain the minus sign" tone="quiet">
+
+<WriteFirst
+  anchor="cosine-minus"
+  prompt="Write one sentence explaining why the derivative of cos(x) being -sin(x) makes sense from the graph."
+  selfCheck="Does your sentence connect the sign to where the cosine graph is rising or falling?"
+>
+
+One possible explanation: **where sine is positive, the cosine graph is moving
+down, so the derivative of cosine needs the negative sign.** Your wording can
+be different.
+
+Check that your sentence talks about movement on the graph, not only the
+formula. The rule is easier to remember when it is tied to rising and falling.
+
+</WriteFirst>
+
+</EmbedCard>
+
+<EmbedCard anchor="what-to-do" title="What to be able to do">
+
+Use the sine and cosine derivative rules, keep track of the negative sign in
+$\frac{d}{dx}[\cos(x)]$, and combine those rules with constants, sums, and
+power rules from Section 2.1. Be able to connect the signs to unit-circle
+motion and interpret a trigonometric derivative as a rate with units.
+
+</EmbedCard>
+
+<EmbedNav current="section-2-2" />

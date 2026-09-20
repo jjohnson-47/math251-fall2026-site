@@ -21,15 +21,14 @@ type VideoResourceProps = {
  * A video offered as a card rather than a player.
  *
  * House policy is that a video may not be embedded until someone has confirmed
- * an English caption track that is not labelled auto-generated. Both Week 4
- * videos serve exactly one caption track and it is the automatic one, so both
- * are links. `docs/video-reviews.json` records what was checked and how. A bare
- * link does not read as a video, hence the thumbnail.
+ * an English caption track that is not labelled auto-generated. Videos that do
+ * not clear that gate remain links. `docs/video-reviews.json` records what was
+ * checked and how. A bare link does not read as a video, hence the thumbnail.
  *
  * The thumbnail is SELF-HOSTED, under public/media/video/. Hotlinking
  * i.ytimg.com would make every page view a request to Google, which is the same
- * thing the youtube-nocookie rule exists to prevent and the reason these two
- * videos are links in the first place.
+ * thing the youtube-nocookie rule exists to prevent and one reason the videos
+ * are links rather than embedded players.
  */
 export function VideoResource({
   title,

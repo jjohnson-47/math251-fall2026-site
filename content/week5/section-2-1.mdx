@@ -1,0 +1,273 @@
+import { EmbedCard } from '@/components/embed-card';
+import { PredictReveal } from '@/components/embed-check';
+import { EmbedNav } from '@/components/embed-nav';
+import { ReadingLine } from '@/components/embed-reading';
+import { VideoResource } from '@/components/embed-video';
+import { WriteFirst } from '@/components/embed-write-first';
+import { activeCalculusSectionTwoOne } from '@/lib/embed-routes';
+
+# Elementary Derivative Rules (Section 2.1)
+
+Up to this point, a derivative has usually come from a graph, a table, or a
+limit. Section 2.1 starts the algebra toolkit. The goal is not to memorize a
+list in isolation. The goal is to look at a formula and know which parts you can
+differentiate immediately.
+
+<ReadingLine
+  href={activeCalculusSectionTwoOne}
+  label="Active Calculus Section 2.1: Elementary derivative rules"
+/>
+
+<EmbedCard anchor="notation" title="Notation is part of the skill" tone="note">
+
+The same derivative can be written several ways.
+
+$$
+f'(x)
+$$
+
+$$
+\frac{dy}{dx}
+$$
+
+$$
+\frac{d}{dx}\left[f(x)\right]
+$$
+
+Read the last one as an instruction: take the derivative, with respect to
+$x$, of whatever is inside the brackets. That instruction notation is useful
+because it keeps the rule visible while you work.
+
+</EmbedCard>
+
+<EmbedCard anchor="first-rules" title="The first rules">
+
+You should leave this section able to use these without starting from the limit
+definition each time.
+
+1. Constants have derivative zero.
+2. Powers follow the power rule.
+3. Constant multiples pass through the derivative.
+4. Sums and differences differentiate term by term.
+5. Exponential functions have their own rule.
+
+In symbols:
+
+$$
+\frac{d}{dx}\left[c\right] = 0
+$$
+
+$$
+\frac{d}{dx}\left[x^n\right] = n x^{n-1}
+$$
+
+$$
+\frac{d}{dx}\left[k f(x)\right] = k f'(x)
+$$
+
+$$
+\frac{d}{dx}\left[f(x) + g(x)\right] = f'(x) + g'(x)
+$$
+
+$$
+\frac{d}{dx}\left[a^x\right] = a^x \ln(a)
+$$
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="roots-and-reciprocals"
+  title="Rewrite roots and reciprocals as powers"
+  tone="quiet"
+>
+
+The power rule also handles negative and fractional exponents. Rewrite first,
+then differentiate.
+
+$$
+\sqrt{x} = x^{1/2}
+\quad\Longrightarrow\quad
+\frac{d}{dx}\left[\sqrt{x}\right]
+= \frac{1}{2}x^{-1/2}
+= \frac{1}{2\sqrt{x}}
+$$
+
+$$
+\frac{1}{x} = x^{-1}
+\quad\Longrightarrow\quad
+\frac{d}{dx}\left[\frac{1}{x}\right]
+= -x^{-2}
+= -\frac{1}{x^2}
+$$
+
+The variable's location decides the rule. $x^5$ is a power function, so the
+power rule applies. $5^x$ is exponential, so its derivative is
+$5^x\ln(5)$. Do not bring the exponent down when the variable is in the
+exponent.
+
+</EmbedCard>
+
+<EmbedCard anchor="video" title="Video" tone="quiet">
+
+I recorded this lesson for this class. It develops the elementary derivative
+rules and works examples with the notation used in Section 2.1. Read the rules
+above first, then use the video as a guided second pass.
+
+<VideoResource
+  captionStatus="YouTube offers only an automatic English caption track for it, and that track has not been checked for accuracy."
+  duration="10 minutes 32 seconds"
+  posterAlt="Title card reading Math 251 - Calculus 1, Section 2.1 - Elementary Derivative Rules. A recorded lesson on constant, power, sum, difference, and exponential derivative rules."
+  title="Math 251 - Derivative Rules"
+  videoId="feQxG1PE0ps"
+  watchHref="https://www.youtube.com/watch?v=feQxG1PE0ps"
+/>
+
+Everything essential from the video is also on this page and in the reading.
+You can **read instead of watching** if your connection is slow or your network
+blocks YouTube.
+
+</EmbedCard>
+
+<EmbedCard anchor="worked-example" title="Worked example: one term at a time" tone="warn">
+
+Suppose
+
+$$
+g(x) = 4x^7 - 3x^2 + 8
+$$
+
+Do not try to do the whole expression at once. Break it into terms.
+
+**First term.** The derivative of $x^7$ is $7x^6$, and the constant multiple
+$4$ stays out front, so $4x^7$ becomes $28x^6$.
+
+**Second term.** The derivative of $x^2$ is $2x$, and the coefficient $-3$
+stays out front, so $-3x^2$ becomes $-6x$.
+
+**Third term.** The derivative of the constant $8$ is $0$.
+
+So
+
+$$
+g'(x) = 28x^6 - 6x
+$$
+
+Notice what did not happen: the exponent did not stay the same, and the
+constant term did not survive.
+
+</EmbedCard>
+
+<EmbedCard
+  anchor="tangent-line"
+  title="Worked example: use the rules to build a tangent line"
+  tone="plain"
+>
+
+Let
+
+$$
+p(x) = x^3 - 2x + 1
+$$
+
+and find the tangent line at $x = 2$.
+
+**Find the point.**
+
+$$
+p(2) = 2^3 - 2(2) + 1 = 5
+$$
+
+**Find the slope.** Differentiate the formula, then evaluate the derivative.
+
+$$
+p'(x) = 3x^2 - 2
+$$
+
+$$
+p'(2) = 3(2)^2 - 2 = 10
+$$
+
+**Build the line.** Use the point $(2,5)$ and slope $10$.
+
+$$
+y = 5 + 10(x - 2)
+$$
+
+Section 1.8 supplied the tangent-line formula. Section 2.1 now gives you a fast
+way to calculate the slope that goes into it.
+
+</EmbedCard>
+
+<EmbedCard anchor="common-trap" title="The constant term disappears" tone="quiet">
+
+The derivative measures rate of change. A constant does not change, so its rate
+of change is zero.
+
+If $f(x) = x^4 + 12$, then
+
+$$
+f'(x) = 4x^3
+$$
+
+not $4x^3 + 12$. The $12$ affects the height of the graph, but not its slope.
+
+</EmbedCard>
+
+<EmbedCard anchor="predict" title="Predict, then check" tone="quiet">
+
+Answer each one in your head first, then open it.
+
+<PredictReveal question="What is the derivative of 9x^5?">
+
+$45x^4$. The power rule changes $x^5$ to $5x^4$, and the coefficient $9$
+stays out front: $9 \cdot 5x^4 = 45x^4$.
+
+</PredictReveal>
+
+<PredictReveal question="What is the derivative of x^3 - 7x + 11?">
+
+$3x^2 - 7$. The derivative of $x^3$ is $3x^2$, the derivative of $-7x$ is
+$-7$, and the derivative of the constant $11$ is zero.
+
+</PredictReveal>
+
+<PredictReveal question="Which is a power function and which is exponential: x^5 or 5^x?">
+
+$x^5$ is a power function because the variable is in the base. $5^x$ is
+exponential because the variable is in the exponent. They do not use the same
+derivative rule.
+
+</PredictReveal>
+
+</EmbedCard>
+
+<EmbedCard anchor="write-first" title="Say which rule you used" tone="quiet">
+
+<WriteFirst
+  anchor="rule-explanation"
+  prompt="Write one sentence explaining how to differentiate 6x^4 - 2x + 5 without naming only the final answer."
+  selfCheck="Does your sentence name the constant multiple, power, and sum rules?"
+>
+
+One possible explanation: **differentiate term by term; keep each coefficient,
+use the power rule on the powers of $x$, and drop the constant term.** Your
+wording can be different.
+
+Check that your sentence says what happened to each kind of term. If it only
+says "$24x^3 - 2$," it gives the result but not the method.
+
+</WriteFirst>
+
+</EmbedCard>
+
+<EmbedCard anchor="what-to-do" title="What to be able to do">
+
+Given a polynomial or a simple exponential expression, identify the rule that
+applies to each term and compute the derivative formula. Be able to rewrite
+roots and reciprocals as powers, explain why a constant term disappears,
+distinguish $x^n$ from $a^x$, and use a derivative value to build a tangent
+line.
+
+</EmbedCard>
+
+<EmbedNav current="section-2-1" />
